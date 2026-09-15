@@ -344,8 +344,8 @@ var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/
 </section>
 
 <!-- ============================================================
-     VIDEOS — click-to-play YouTube facades (thumbnail + play button;
-     the iframe is only created when tapped, so the page stays light).
+     VIDEOS — thumbnails that open a full-width lightbox player. The
+     YouTube iframe only exists while the lightbox is open.
      ============================================================ -->
 <section class="videos-section" id="videos">
     <div class="container">
@@ -360,18 +360,6 @@ var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/
         </div>
 
         <div class="grid-12 videos-grid">
-                        <figure class="video video--featured col-12">
-                <button type="button" class="video-facade" data-video-id="sI_jpMsnNS8" data-video-title="Hoʻopuka E Ka Lā Ma Ka Hikina" aria-label="Play video: Hoʻopuka E Ka Lā Ma Ka Hikina">
-                                        <img src="https://i.ytimg.com/vi/sI_jpMsnNS8/hqdefault.jpg" alt="" loading="lazy">
-                    <span class="video-play" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor"><path d="M6 3.5v15l12-7.5z"/></svg>
-                    </span>
-                </button>
-                <figcaption>
-                    <strong>Hoʻopuka E Ka Lā Ma Ka Hikina</strong>
-                    <span>Hālau i Ka Pono dancers</span>
-                </figcaption>
-            </figure>
                         <figure class="video col-4">
                 <button type="button" class="video-facade" data-video-id="ATLxCJPiG5c" data-video-title="Zen and the Art of Hula" aria-label="Play video: Zen and the Art of Hula">
                                         <img src="https://i.ytimg.com/vi/ATLxCJPiG5c/hqdefault.jpg" alt="" loading="lazy">
@@ -409,6 +397,15 @@ var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/
                 </figcaption>
             </figure>
                     </div>
+    </div>
+
+    <div class="video-lightbox" hidden role="dialog" aria-modal="true" aria-label="Video player">
+        <div class="video-lightbox-backdrop" data-close></div>
+        <div class="video-lightbox-inner">
+            <button type="button" class="video-lightbox-close" aria-label="Close video" data-close>&times;</button>
+            <div class="video-lightbox-frame"></div>
+            <p class="video-lightbox-title"></p>
+        </div>
     </div>
 </section>
 
@@ -492,7 +489,7 @@ var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/
                     46 Lake Street<br>Oak Park, IL 60302
                 </address>
                 <a href="tel:7082976321" class="footer-link">708-297-6321</a>
-                <a href="mailto:info&#64;z&#108;&#109;c&#46;o&#114;&#103;" class="footer-link">inf&#111;&#64;zlmc.o&#114;&#103;</a>
+                <a href="mailto:in&#102;&#111;&#64;z&#108;&#109;&#99;.org" class="footer-link">in&#102;&#111;&#64;zlm&#99;.org</a>
             </div>
             <p class="footer-credit col-4">
                 <a href="https://more-than.design" target="_blank" rel="noopener" aria-label="Designed by OP/AL (opens in a new tab)">

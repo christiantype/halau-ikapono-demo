@@ -219,18 +219,49 @@ document.addEventListener('DOMContentLoaded', function () {
         phone.addEventListener('change', function (e) { if (e.matches) setView('grid'); });
     }
 
-    // ── Video facades — swap the thumbnail for the player on tap ──
-    document.querySelectorAll('.video-facade').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            const id = btn.dataset.videoId;
+    // ── Video lightbox — thumbnails open a full-width player ──────
+    const lightbox = document.querySelector('.video-lightbox');
+    if (lightbox) {
+        const frame = lightbox.querySelector('.video-lightbox-frame');
+        const title = lightbox.querySelector('.video-lightbox-title');
+        const closeBtn = lightbox.querySelector('.video-lightbox-close');
+        let opener = null;
+
+        const openVideo = function (id, label, btn) {
             const iframe = document.createElement('iframe');
             iframe.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
-            iframe.title = btn.dataset.videoTitle || 'Video';
+            iframe.title = label || 'Video';
             iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
             iframe.setAttribute('allowfullscreen', '');
-            btn.replaceWith(iframe);
-        }, { once: true });
-    });
+            frame.replaceChildren(iframe);
+            title.textContent = label || '';
+            lightbox.hidden = false;
+            document.body.classList.add('lightbox-open');
+            opener = btn;
+            closeBtn.focus();
+        };
+
+        const closeVideo = function () {
+            lightbox.hidden = true;
+            frame.replaceChildren();   // removing the iframe stops playback
+            document.body.classList.remove('lightbox-open');
+            if (opener) { opener.focus(); opener = null; }
+        };
+
+        document.querySelectorAll('.video-facade').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                openVideo(btn.dataset.videoId, btn.dataset.videoTitle, btn);
+            });
+        });
+
+        lightbox.querySelectorAll('[data-close]').forEach(function (el) {
+            el.addEventListener('click', closeVideo);
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !lightbox.hidden) closeVideo();
+        });
+    }
 
     // ── Dev grid overlay — press "G" to toggle ─────────────────
     const gridOverlay = document.querySelector('.grid-overlay');
