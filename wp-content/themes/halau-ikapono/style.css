@@ -1031,7 +1031,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .home-events .section-heading { color: var(--green-900); }
 .home-events .events-list { border-top-color: var(--green-900); }
 .home-events .event-row { border-bottom-color: var(--green-200); }
-.home-events .event-row:hover { background: rgba(255,255,255,0.45); }
+.home-events .event-row:hover { background: transparent; }
 .home-events .event-date-box,
 .home-events .event-info h3 { color: var(--green-900); }
 .home-events .event-info .meta { color: var(--gray-700); }
@@ -1058,7 +1058,8 @@ a.event-row { color: inherit; text-decoration: none; }
     transition: background var(--ease-fast);
 }
 
-.event-row:hover { background: var(--gray-100); }
+.event-row:hover { background: transparent; }
+.event-row:hover .event-info h3 { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 
 .event-date-box {
     flex-shrink: 0;
@@ -1165,9 +1166,15 @@ a.event-row { color: inherit; text-decoration: none; }
     font-size: 0.74em;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--green-900);
     vertical-align: 0.04em;
 }
+
+/* Each sense in its own palette colour (all ≥ 4.5:1 on the page). */
+.quote-frame-text .q-sans:nth-of-type(1) { color: var(--green-900); }
+.quote-frame-text .q-sans:nth-of-type(2) { color: var(--gold-700); }
+.quote-frame-text .q-sans:nth-of-type(3) { color: var(--sage-700); }
+.quote-frame-text .q-sans:nth-of-type(4) { color: var(--gold-900); }
+.quote-frame-text .q-sans:nth-of-type(5) { color: var(--green-950); }
 
 .quote-frame-text figcaption {
     font-family: var(--font-sans);
@@ -2003,7 +2010,8 @@ body.lightbox-open { overflow: hidden; }
     transition: background var(--ease-fast);
 }
 
-.event-full-row:hover { background: var(--gray-100); }
+.event-full-row:hover { background: transparent; }
+.event-full-row:hover .info h3 { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 
 .event-full-row .date-block {
     text-align: left;
