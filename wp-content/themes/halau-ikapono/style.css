@@ -2679,7 +2679,7 @@ body.lightbox-open { overflow: hidden; }
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    min-height: 720px;
+    min-height: 600px;
     display: flex;
     align-items: stretch;
     padding-block: 5rem;
@@ -2764,36 +2764,10 @@ body.lightbox-open { overflow: hidden; }
     z-index: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 4rem;
+    justify-content: center;
+    gap: 3.5rem;
 }
 
-/* Nav and contact stack down the centre line of the footer. */
-.footer-head {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 3rem;
-}
-
-.footer-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    align-items: center;
-}
-
-.footer-nav a {
-    font-family: var(--font-sans);
-    font-size: var(--text-base);
-    color: var(--sage-900);
-    text-decoration: none;
-    opacity: 1;
-    transition: opacity var(--ease-fast);
-}
-
-.footer-nav a:hover { opacity: 1; }
 
 .footer-contact {
     display: flex;
