@@ -1180,11 +1180,19 @@ a.event-row { color: inherit; text-decoration: none; }
 
 /* The photo sits inside a thick solid colour frame (padding on a coloured
    box); the pictures cross-fade within it. */
+/* The frame rounds its top-left corner; the photo rounds its bottom-right.
+   Opposite corners, so the two shapes answer each other. */
 .quote-frame-visual {
+    --frame-r: clamp(80px, 12vw, 180px);
+    --frame-pad: clamp(1.25rem, 2.5vw, 2.5rem);
     position: relative;
-    padding: clamp(1.25rem, 2.5vw, 2.5rem);
+    padding: var(--frame-pad);
     background: var(--gold-700);
+    border-radius: var(--frame-r) 0 0 0;
 }
+
+/* Cream ring around the photo, same corner treatment. */
+.quote-frame-ring { display: contents; }
 
 .quote-frame-photos {
     position: relative;
@@ -1203,11 +1211,11 @@ a.event-row { color: inherit; text-decoration: none; }
 
 .quote-frame-photos img.is-active { opacity: 1; }
 
-/* Soft squircle mask on the framed photo. */
+/* Top-left follows the frame concentrically (frame radius minus the
+   padding) so the photo nests inside the curve; bottom-right is the big one. */
 .quote-frame-photos {
-    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 125%22 preserveAspectRatio=%22none%22%3E%3Crect fill=%22%23000%22 x=%220%22 y=%220%22 width=%22100%22 height=%22125%22 rx=%2234%22 ry=%2234%22/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 125%22 preserveAspectRatio=%22none%22%3E%3Crect fill=%22%23000%22 x=%220%22 y=%220%22 width=%22100%22 height=%22125%22 rx=%2234%22 ry=%2234%22/%3E%3C/svg%3E");
-    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-    -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+    border-radius: calc(var(--frame-r) - var(--frame-pad)) 0 var(--frame-r) 0;
+    overflow: hidden;
     background: transparent;
 }
 
