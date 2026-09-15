@@ -263,6 +263,64 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ── Registration flow — step navigation + live summary ──────
+    const flow = document.querySelector('.register-flow');
+    if (flow) {
+        const steps = Array.from(flow.querySelectorAll('.register-step'));
+        const marks = Array.from(flow.querySelectorAll('.register-steps li'));
+        const sum = function (k) { return flow.querySelector('[data-sum="' + k + '"]'); };
+        const qtySel = flow.querySelector('#reg_qty');
+        let at = 0;
+
+        const money = function (n) { return n > 0 ? '$' + n.toFixed(2).replace(/\.00$/, '') : 'Free'; };
+
+        const refresh = function () {
+            const chosen = flow.querySelector('input[name="item"]:checked');
+            const qty = parseInt(qtySel.value, 10) || 1;
+            sum('qty').textContent = qty;
+            if (!chosen) { sum('title').textContent = '—'; sum('price').textContent = '—'; sum('total').textContent = '—'; return; }
+            const price = parseFloat(chosen.dataset.price) || 0;
+            sum('title').textContent = chosen.dataset.title;
+            sum('price').textContent = price > 0 ? money(price) + ' ' + chosen.dataset.unit : chosen.dataset.unit;
+            sum('total').textContent = price > 0 ? money(price * qty) + (chosen.dataset.unit.indexOf('per') === 0 ? ' ' + chosen.dataset.unit : '') : 'Free';
+        };
+
+        const show = function (i) {
+            at = Math.max(0, Math.min(steps.length - 1, i));
+            steps.forEach(function (st, n) { st.classList.toggle('is-active', n === at); });
+            marks.forEach(function (m, n) {
+                m.classList.toggle('is-current', n === at);
+                m.classList.toggle('is-done', n < at);
+            });
+            flow.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        const valid = function (step) {
+            const fields = Array.from(step.querySelectorAll('input, select, textarea'));
+            const radios = fields.filter(function (f) { return f.type === 'radio' && f.required; });
+            if (radios.length && !radios.some(function (r) { return r.checked; })) { radios[0].focus(); return false; }
+            for (const f of fields) {
+                if (f.type === 'radio') continue;
+                if (!f.checkValidity()) { f.reportValidity(); return false; }
+            }
+            return true;
+        };
+
+        flow.querySelectorAll('[data-next]').forEach(function (b) {
+            b.addEventListener('click', function () { if (valid(steps[at])) show(at + 1); });
+        });
+        flow.querySelectorAll('[data-prev]').forEach(function (b) {
+            b.addEventListener('click', function () { show(at - 1); });
+        });
+        flow.addEventListener('change', refresh);
+        flow.addEventListener('submit', function (e) {
+            if (!valid(steps[at])) e.preventDefault();
+        });
+        refresh();
+        // Preselected item (from ?event= / ?class=) skips straight to details.
+        if (flow.querySelector('input[name="item"]:checked')) show(1);
+    }
+
     // ── Dev grid overlay — press "G" to toggle ─────────────────
     const gridOverlay = document.querySelector('.grid-overlay');
     if (gridOverlay) {
