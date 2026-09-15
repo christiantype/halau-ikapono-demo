@@ -165,6 +165,7 @@ body {
 }
 
 img, picture, video { display: block; max-width: 100%; }
+strong, b { font-weight: 400; }
 input, button, textarea, select { font: inherit; }
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-serif);
@@ -255,7 +256,7 @@ button { cursor: pointer; border: none; background: none; }
     display: inline-block;
     font-family: var(--font-sans);
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-accent);
@@ -295,7 +296,7 @@ button { cursor: pointer; border: none; background: none; }
 .mixed { display: flex; flex-direction: column; align-items: flex-start; gap: 0.35em; }
 .mixed .sans {
     font-family: var(--font-sans);
-    font-weight: 700;
+    font-weight: 400;
     font-size: 0.38em;
     letter-spacing: 0.16em;
     line-height: 1;
@@ -313,7 +314,7 @@ button { cursor: pointer; border: none; background: none; }
     padding: 0.75rem 2rem;
     font-family: var(--font-sans);
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     border-radius: var(--radius-full);
@@ -847,14 +848,14 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .since-badge .yr {
     font-family: var(--font-serif);
     font-size: 1.75rem;
-    font-weight: 600;
+    font-weight: 400;
     color: var(--green-900);
     line-height: 1;
 }
 
 .since-badge .text {
     font-size: 0.6rem;
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--green-900);
@@ -952,14 +953,14 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 
 .program-panel-label {
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
 }
 
 .program-panel-status {
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     padding: 0.3rem 0.7rem;
@@ -998,7 +999,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .program-panel-meta > div { display: contents; }
 
 .program-panel-meta dt {
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     font-size: var(--text-xs);
@@ -1068,7 +1069,7 @@ a.event-row { color: inherit; text-decoration: none; }
 
 .event-date-box .mo {
     font-size: 0.65rem;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     display: block;
@@ -1077,7 +1078,7 @@ a.event-row { color: inherit; text-decoration: none; }
 .event-date-box .dy {
     font-family: var(--font-serif);
     font-size: 1.75rem;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1;
     display: block;
 }
@@ -1086,7 +1087,7 @@ a.event-row { color: inherit; text-decoration: none; }
 
 .event-info .tag {
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--gold-700);
@@ -1156,7 +1157,7 @@ a.event-row { color: inherit; text-decoration: none; }
    accent — so the sentence reads serif/sans/serif. */
 .quote-frame-text .q-sans {
     font-family: var(--font-sans);
-    font-weight: 700;
+    font-weight: 400;
     font-size: 0.74em;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -1167,7 +1168,7 @@ a.event-row { color: inherit; text-decoration: none; }
 .quote-frame-text figcaption {
     font-family: var(--font-sans);
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--gray-700);
@@ -1437,7 +1438,7 @@ a.event-row { color: inherit; text-decoration: none; }
 .about-band-quote figcaption {
     font-family: var(--font-sans);
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     opacity: 0.9;
@@ -1597,7 +1598,7 @@ a.event-row { color: inherit; text-decoration: none; }
 .about-band-quote figcaption {
     font-family: var(--font-sans);
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     opacity: 0.9;
@@ -1634,7 +1635,7 @@ a.event-row { color: inherit; text-decoration: none; }
 .kumu-info h3 {
     font-family: var(--font-sans);
     font-size: clamp(1.25rem, 2vw, 1.75rem);
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.08em;
     color: var(--green-900);
     margin-bottom: 0.25rem;
@@ -1642,7 +1643,7 @@ a.event-row { color: inherit; text-decoration: none; }
 
 .kumu-info .kumu-title {
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--gold-700);
@@ -1683,7 +1684,7 @@ a.event-row { color: inherit; text-decoration: none; }
 .testimonials-heading {
     font-family: var(--font-sans);
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--green-900);
@@ -1726,7 +1727,7 @@ a.event-row { color: inherit; text-decoration: none; }
     display: block;
     font-family: var(--font-sans);
     font-size: var(--text-base);
-    font-weight: 600;
+    font-weight: 400;
     color: var(--green-900);
 }
 
@@ -1774,7 +1775,7 @@ a.event-row { color: inherit; text-decoration: none; }
     display: block;
     font-family: var(--font-sans);
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--green-900);
@@ -1856,7 +1857,7 @@ a.event-row { color: inherit; text-decoration: none; }
     font-family: var(--font-sans);
 }
 
-.video figcaption strong { font-size: var(--text-base); font-weight: 600; color: var(--gray-900); }
+.video figcaption strong { font-size: var(--text-base); font-weight: 400; color: var(--gray-900); }
 .video figcaption span { font-size: var(--text-sm); color: var(--color-text-muted); }
 
 /* Lightbox: dark full-screen overlay, player spans the site width. */
@@ -1957,7 +1958,7 @@ body.lightbox-open { overflow: hidden; }
 .calendar-section h2 {
     font-family: var(--font-sans);
     font-size: var(--text-sm);
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.14em;
     color: var(--green-900);
     margin-bottom: 1.5rem;
@@ -1993,7 +1994,7 @@ body.lightbox-open { overflow: hidden; }
 
 .event-full-row .date-block .mo {
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     display: block;
@@ -2064,7 +2065,7 @@ body.lightbox-open { overflow: hidden; }
 .weekly-schedule h3 {
     font-family: var(--font-sans);
     font-size: var(--text-sm);
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.14em;
     color: var(--gray-900);
     margin: 0.5rem 0 1rem;
@@ -2090,7 +2091,7 @@ body.lightbox-open { overflow: hidden; }
 
 .weekly-day {
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--green-900);
@@ -2101,7 +2102,7 @@ body.lightbox-open { overflow: hidden; }
 
 .weekly-type {
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     text-align: right;
@@ -2126,7 +2127,7 @@ body.lightbox-open { overflow: hidden; }
 .events-cta h3 {
     font-family: var(--font-sans);
     font-size: clamp(1.25rem, 2vw, 1.75rem);
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.08em;
     color: var(--green-900);
     margin-bottom: 0.5rem;
@@ -2185,7 +2186,7 @@ body.lightbox-open { overflow: hidden; }
     grid-column: span 2;
     font-family: var(--font-sans);
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     padding-top: 0.75rem;
@@ -2237,7 +2238,7 @@ body.lightbox-open { overflow: hidden; }
 }
 
 .class-band-levels li { display: flex; flex-direction: column; font-family: var(--font-sans); }
-.class-band-levels strong { font-size: var(--text-sm); font-weight: 600; }
+.class-band-levels strong { font-size: var(--text-sm); font-weight: 400; }
 .class-band-levels span { font-size: var(--text-xs); opacity: 0.8; }
 
 .class-band-action {
@@ -2245,7 +2246,7 @@ body.lightbox-open { overflow: hidden; }
     padding-top: 0.75rem;
     font-family: var(--font-sans);
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     position: relative;
@@ -2272,7 +2273,7 @@ body.lightbox-open { overflow: hidden; }
 .classes-enroll h3 {
     font-family: var(--font-sans);
     font-size: clamp(1.25rem, 2vw, 1.75rem);
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.08em;
     line-height: 1.1;
     text-transform: uppercase;
@@ -2958,7 +2959,7 @@ body.lightbox-open { overflow: hidden; }
 .contact-label {
     display: block;
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--green-900);
@@ -2984,7 +2985,7 @@ body.lightbox-open { overflow: hidden; }
 .form-field label {
     font-family: var(--font-sans);
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--gray-900);
@@ -3204,7 +3205,7 @@ body.lightbox-open { overflow: hidden; }
 .event-type-tag {
     display: inline-block;
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 2px 10px;
@@ -3251,7 +3252,7 @@ body.lightbox-open { overflow: hidden; }
 .detail-label {
     display: block;
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--gold-700);
@@ -3283,7 +3284,7 @@ body.lightbox-open { overflow: hidden; }
 
 .event-cal-block .mo {
     font-size: 0.58rem;
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--white);
@@ -3293,7 +3294,7 @@ body.lightbox-open { overflow: hidden; }
 .event-cal-block .dy {
     font-family: var(--font-serif);
     font-size: 1.6rem;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1;
     display: block;
 }
@@ -3307,7 +3308,7 @@ body.lightbox-open { overflow: hidden; }
 
 .payment-badge {
     font-size: var(--text-xs);
-    font-weight: 600;
+    font-weight: 400;
     letter-spacing: 0.06em;
     padding: 0.25rem 0.75rem;
     border-radius: var(--radius-full);
