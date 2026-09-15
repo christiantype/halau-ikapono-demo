@@ -3,8 +3,31 @@ document.addEventListener('DOMContentLoaded', function () {
     const hamburger = document.querySelector('.hamburger');
     const navPrimary = document.querySelector('.nav-primary');
 
+    // Menu colours: one contrast-checked palette pair on load, and a fresh
+    // one every time the menu opens.
+    const menuPairs = [
+        ['#f8f8f8', '#a44728'], ['#f8f8f8', '#2e4475'], ['#f8f8f8', '#455d3c'], ['#f8f8f8', '#171713'],
+        ['#171713', '#f8f8f8'], ['#2e4475', '#f8f8f8'], ['#455d3c', '#f8f8f8'], ['#a44728', '#f8f8f8'],
+        ['#edcbc0', '#6e3421'], ['#dadfec', '#1e2e52'], ['#dee6db', '#2e3e28'], ['#d76741', '#171713']
+    ];
+    function menuLum(hex) {
+        const c = hex.replace('#', ''); const f = function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+        return 0.2126 * f(parseInt(c.substr(0, 2), 16)) + 0.7152 * f(parseInt(c.substr(2, 2), 16)) + 0.0722 * f(parseInt(c.substr(4, 2), 16));
+    }
+    const menuOk = menuPairs.filter(function (p) { const a = menuLum(p[0]), b = menuLum(p[1]); return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) >= 4.5; });
+    let lastMenu = -1;
+    function recolorMenu() {
+        if (!navPrimary || !menuOk.length) return;
+        let i; do { i = Math.floor(Math.random() * menuOk.length); } while (menuOk.length > 1 && i === lastMenu);
+        lastMenu = i;
+        navPrimary.style.setProperty('--menu-bg', menuOk[i][0]);
+        navPrimary.style.setProperty('--menu-fg', menuOk[i][1]);
+    }
+    recolorMenu();
+
     if (hamburger && navPrimary) {
         hamburger.addEventListener('click', function () {
+            if (!navPrimary.classList.contains('is-open')) recolorMenu();
             const open = navPrimary.classList.toggle('is-open');
             hamburger.classList.toggle('is-active', open);
             hamburger.setAttribute('aria-expanded', open);
@@ -188,9 +211,12 @@ document.addEventListener('DOMContentLoaded', function () {
             gTouchX = null;
         });
 
+        // Phones get the grid only (the slideshow is desktop/tablet).
+        const phone = window.matchMedia('(max-width: 768px)');
         let saved = null;
         try { saved = localStorage.getItem('halau-gallery-view'); } catch (e) {}
-        setView(saved === 'grid' ? 'grid' : 'slideshow');
+        setView(phone.matches ? 'grid' : (saved === 'grid' ? 'grid' : 'slideshow'));
+        phone.addEventListener('change', function (e) { if (e.matches) setView('grid'); });
     }
 
     // ── Dev grid overlay — press "G" to toggle ─────────────────
