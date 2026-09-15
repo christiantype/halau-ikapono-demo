@@ -219,6 +219,19 @@ document.addEventListener('DOMContentLoaded', function () {
         phone.addEventListener('change', function (e) { if (e.matches) setView('grid'); });
     }
 
+    // ── Video facades — swap the thumbnail for the player on tap ──
+    document.querySelectorAll('.video-facade').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const id = btn.dataset.videoId;
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?autoplay=1&rel=0';
+            iframe.title = btn.dataset.videoTitle || 'Video';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+            iframe.setAttribute('allowfullscreen', '');
+            btn.replaceWith(iframe);
+        }, { once: true });
+    });
+
     // ── Dev grid overlay — press "G" to toggle ─────────────────
     const gridOverlay = document.querySelector('.grid-overlay');
     if (gridOverlay) {
