@@ -317,7 +317,7 @@ button { cursor: pointer; border: none; background: none; }
     font-weight: 400;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    border-radius: var(--radius-full);
+    border-radius: var(--radius);
     border: 1.5px solid transparent;
     transition: all var(--ease);
     cursor: pointer;
@@ -1143,6 +1143,10 @@ a.event-row { color: inherit; text-decoration: none; }
 .quote-frame-text { margin: 0; }
 
 .quote-frame-text blockquote {
+    /* Opening quote mark hangs into the margin. Safari honours
+       hanging-punctuation; elsewhere a negative indent does the job. */
+    hanging-punctuation: first;
+    text-indent: -0.42em;
     font-family: var(--font-serif);
     font-size: clamp(1.5rem, 2.6vw, 2.5rem);
     font-weight: 200;
@@ -1214,6 +1218,10 @@ a.event-row { color: inherit; text-decoration: none; }
 
 @media (prefers-reduced-motion: reduce) {
     .quote-frame-photos img { transition: none; }
+}
+
+@supports (hanging-punctuation: first) {
+    .quote-frame-text blockquote { text-indent: 0; }
 }
 
 /* ============================================================
@@ -1426,6 +1434,7 @@ a.event-row { color: inherit; text-decoration: none; }
 .about-band-quote figcaption { color: #fff; mix-blend-mode: normal; }
 
 .about-band-quote blockquote {
+    hanging-punctuation: first last;
     font-family: var(--font-serif);
     font-size: clamp(1.75rem, 3.4vw, 3rem);
     font-weight: 200;
@@ -1713,6 +1722,7 @@ a.event-row { color: inherit; text-decoration: none; }
 }
 
 .testimonial-slide blockquote {
+    hanging-punctuation: first last;
     font-family: var(--font-serif);
     text-transform: none;
     font-size: clamp(1.75rem, 3.2vw, 2.9rem);
@@ -1917,7 +1927,7 @@ a.event-row { color: inherit; text-decoration: none; }
     width: 40px;
     height: 40px;
     border: 1px solid rgba(255,255,255,0.5);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius);
     background: transparent;
     color: #fff;
     font-size: 1.5rem;
@@ -2511,7 +2521,7 @@ body.lightbox-open { overflow: hidden; }
     height: 44px;
     padding: 0;
     border: 1px solid var(--green-800);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius);
     background: transparent;
     color: var(--green-900);
     font-size: var(--text-lg);
@@ -2823,16 +2833,23 @@ body.lightbox-open { overflow: hidden; }
     margin: 0;
 }
 
-/* Affiliation — ZLMC wordmark sits between the statement and the base row,
-   drawn in the footer text color via currentColor. */
-.footer-affiliation > .col-12 {
+.footer-contact-row {
     display: flex;
-    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5rem 1.5rem;
     text-align: center;
 }
+
+/* Affiliation — centre column of the base row: eyebrow + wordmark on one
+   line, the nonprofit note beneath. */
+.footer-affiliation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    text-align: center;
+}
+
+.footer-affiliation .footer-eyebrow { line-height: 1.4; }
 
 .footer-affiliation-logo {
     display: inline-flex;
@@ -2844,13 +2861,13 @@ body.lightbox-open { overflow: hidden; }
 
 .footer-affiliation-logo svg {
     display: block;
-    height: 30px;
+    height: 22px;
     width: auto;
 }
 
 .footer-affiliation-note {
     font-family: var(--font-sans);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
 }
 
 .footer-base {
