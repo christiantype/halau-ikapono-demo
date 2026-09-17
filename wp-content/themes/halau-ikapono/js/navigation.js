@@ -279,7 +279,20 @@ document.addEventListener('DOMContentLoaded', function () {
             const qty = parseInt(qtySel.value, 10) || 1;
             sum('qty').textContent = qty;
             if (!chosen) { sum('title').textContent = '—'; sum('price').textContent = '—'; sum('total').textContent = '—'; return; }
-            const price = parseFloat(chosen.dataset.price) || 0;
+            const senior = flow.querySelector('#reg_senior');
+            const half = senior && senior.checked && chosen.dataset.senior === '1';
+            const price = (parseFloat(chosen.dataset.price) || 0) * (half ? 0.5 : 1);
+            const discRow = flow.querySelector('[data-sum-row="discount"]');
+            if (discRow) discRow.hidden = !half;
+            const schol = flow.querySelector('#reg_scholarship');
+            const wantsScholarship = !!(schol && schol.checked);
+            const scholRow = flow.querySelector('[data-sum-row="scholarship"]');
+            if (scholRow) scholRow.hidden = !wantsScholarship;
+            const payList = flow.querySelector('.choice-list--pay');
+            const scholNote = flow.querySelector('.scholarship-note');
+            if (payList) payList.hidden = wantsScholarship;
+            if (scholNote) scholNote.hidden = !wantsScholarship;
+            flow.querySelectorAll('input[name="reg_method"]').forEach(function (i) { i.required = !wantsScholarship; });
             sum('title').textContent = chosen.dataset.title;
             sum('price').textContent = price > 0 ? money(price) + ' ' + chosen.dataset.unit : chosen.dataset.unit;
             sum('total').textContent = price > 0 ? money(price * qty) + (chosen.dataset.unit.indexOf('per') === 0 ? ' ' + chosen.dataset.unit : '') : 'Free';
@@ -313,6 +326,18 @@ document.addEventListener('DOMContentLoaded', function () {
             b.addEventListener('click', function () { show(at - 1); });
         });
         flow.addEventListener('change', refresh);
+        // Submit button says where it leads: Stripe for card, done otherwise.
+        const submit = flow.querySelector('[data-submit-label]');
+        const relabel = function () {
+            const m = flow.querySelector('input[name="reg_method"]:checked');
+            const chosen = flow.querySelector('input[name="item"]:checked');
+            const freeItem = chosen && !(parseFloat(chosen.dataset.price) > 0);
+            const schol = flow.querySelector('#reg_scholarship');
+            const wantsScholarship = !!(schol && schol.checked);
+            if (submit) submit.textContent = (m && m.value === 'card' && !freeItem && !wantsScholarship) ? submit.dataset.submitLabelCard : submit.dataset.submitLabel;
+        };
+        flow.addEventListener('change', relabel);
+        relabel();
         flow.addEventListener('submit', function (e) {
             if (!valid(steps[at])) e.preventDefault();
         });

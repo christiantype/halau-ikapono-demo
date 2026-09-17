@@ -212,7 +212,7 @@ var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/
         <div class="grid-12">
             <div class="col-8">
                 <h1>Register</h1>
-                <p>You are all set.</p>
+                <p>Sign up for a class or an event.</p>
             </div>
         </div>
     </div>
@@ -221,21 +221,240 @@ var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/
 <section class="register-section">
     <div class="container">
 
-                <!-- ---------- Step 4: confirmation ---------- -->
-        <div class="grid-12">
-            <div class="register-done col-7 col-start-3">
-                <span class="register-kicker">Registration received</span>
-                <h2 class="register-done-title">Mahalo — you are registered for Your class or event.</h2>
-                <dl class="register-summary">
-                    <div><dt>Reference</dt><dd>HIP-DEMO01</dd></div>                    <div><dt>Total</dt><dd>$--</dd></div>                    <div><dt>Payment</dt><dd>Venmo</dd></div>                </dl>
-                                <p class="register-next">Send the total to @HalauIKaPono with your reference in the note.</p>
-                                <p class="register-note">A confirmation has been sent to your email. Questions? <a href="https://christiantype.github.io/halau-ikapono-demo/contact/">Get in touch</a>.</p>
-                <div class="register-actions">
-                    <a href="https://christiantype.github.io/halau-ikapono-demo/events/" class="btn btn-outline-green">Events &amp; calendar</a>
-                    <a href="https://christiantype.github.io/halau-ikapono-demo/" class="btn btn-gold">Home</a>
+        
+                <form class="register-flow" action="https://christiantype.github.io/halau-ikapono-demo/wp-admin/admin-post.php" method="post" novalidate>
+            <input type="hidden" name="action" value="halau_register">
+            <input type="hidden" id="halau_nonce" name="halau_nonce" value="8eaa864231" /><input type="hidden" name="_wp_http_referer" value="/register/?done=1&#038;ref=HIP-DEMO01&#038;item=Your+class+or+event&#038;total=%24--&#038;method=venmo" />
+            <ol class="register-steps" aria-label="Progress">
+                <li class="is-current" data-step-label="1"><span>1</span> Choose</li>
+                <li data-step-label="2"><span>2</span> Details</li>
+                <li data-step-label="3"><span>3</span> Payment</li>
+                <li data-step-label="4"><span>4</span> Confirm</li>
+            </ol>
+
+            <div class="grid-12 register-grid">
+
+                <div class="register-main col-7">
+
+                    <!-- ---------- Step 1: what ---------- -->
+                    <fieldset class="register-step is-active" data-step="1">
+                        <legend class="register-legend">What would you like to join?</legend>
+
+                        <h3 class="register-group">Classes</h3>
+                        <div class="choice-list">
+                                                        <label class="choice">
+                                <input type="radio" name="item" value="class:hula-basics" data-title="Hula Basics" data-price="80" data-unit="per month" data-senior="1"  required>
+                                <span class="choice-body">
+                                    <span class="choice-title">Hula Basics</span>
+                                    <span class="choice-meta">Beginner · Wednesdays 7:00 PM · Fundamentals Saturdays 10:00 AM · In person or Zoom</span>
+                                </span>
+                                <span class="choice-price">$80 <small>per month</small></span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="item" value="class:modern-auana" data-title="Modern Auana" data-price="90" data-unit="per month" data-senior="1"  required>
+                                <span class="choice-body">
+                                    <span class="choice-title">Modern Auana</span>
+                                    <span class="choice-meta">Intermediate Mondays 6:00 PM &amp; Saturdays 11:00 AM · Advanced Mondays 7:00 PM</span>
+                                </span>
+                                <span class="choice-price">$90 <small>per month</small></span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="item" value="class:ancient-kahiko" data-title="Ancient Kahiko" data-price="90" data-unit="per month" data-senior="1"  required>
+                                <span class="choice-body">
+                                    <span class="choice-title">Ancient Kahiko</span>
+                                    <span class="choice-meta">Intermediate · Mondays 5:00 PM · In person or Zoom</span>
+                                </span>
+                                <span class="choice-price">$90 <small>per month</small></span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="item" value="class:keiki" data-title="Children&#039;s Hula" data-price="60" data-unit="per month" data-senior="1"  required>
+                                <span class="choice-body">
+                                    <span class="choice-title">Children&#039;s Hula</span>
+                                    <span class="choice-meta">Beginners · Saturdays 9:00 AM · In person</span>
+                                </span>
+                                <span class="choice-price">$60 <small>per month</small></span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="item" value="class:chair" data-title="Chair Hula" data-price="60" data-unit="per month" data-senior="1"  required>
+                                <span class="choice-body">
+                                    <span class="choice-title">Chair Hula</span>
+                                    <span class="choice-meta">Mondays 4:00 PM · In person or Zoom</span>
+                                </span>
+                                <span class="choice-price">$60 <small>per month</small></span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="item" value="class:private" data-title="Private Lesson" data-price="75" data-unit="per lesson" data-senior="0"  required>
+                                <span class="choice-body">
+                                    <span class="choice-title">Private Lesson</span>
+                                    <span class="choice-meta">One-on-one · 60 minutes</span>
+                                </span>
+                                <span class="choice-price">$75 <small>per lesson</small></span>
+                            </label>
+                                                    </div>
+
+                                                <h3 class="register-group">Upcoming events</h3>
+                        <div class="choice-list">
+                                                        <label class="choice">
+                                <input type="radio" name="item" value="event:179" data-title="Event Title 4" data-price="0" data-unit="Price" >
+                                <span class="choice-body">
+                                    <span class="choice-title">Event Title 4</span>
+                                    <span class="choice-meta">Sun, Oct 4 · Time TBD</span>
+                                </span>
+                                <span class="choice-price">Price</span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="item" value="event:180" data-title="Event Title 3" data-price="0" data-unit="Price" >
+                                <span class="choice-body">
+                                    <span class="choice-title">Event Title 3</span>
+                                    <span class="choice-meta">Sat, Nov 14 · Time TBD</span>
+                                </span>
+                                <span class="choice-price">Price</span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="item" value="event:181" data-title="Event Title 2" data-price="0" data-unit="Price" >
+                                <span class="choice-body">
+                                    <span class="choice-title">Event Title 2</span>
+                                    <span class="choice-meta">Sun, Dec 13 · Time TBD</span>
+                                </span>
+                                <span class="choice-price">Price</span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="item" value="event:182" data-title="Event Title 1" data-price="0" data-unit="Price" >
+                                <span class="choice-body">
+                                    <span class="choice-title">Event Title 1</span>
+                                    <span class="choice-meta">Tue, Jan 12 · Time TBD</span>
+                                </span>
+                                <span class="choice-price">Price</span>
+                            </label>
+                                                    </div>
+                        
+                        <p class="register-fineprint"><strong>Money is never a reason not to dance.</strong> Scholarships are available for every class &mdash; request one on the next step, no questions asked. Dancers over 70 pay half tuition. Tuition shown is provisional.</p>
+
+                        <div class="register-nav">
+                            <button type="button" class="btn btn-gold" data-next>Continue</button>
+                        </div>
+                    </fieldset>
+
+                    <!-- ---------- Step 2: who ---------- -->
+                    <fieldset class="register-step" data-step="2">
+                        <legend class="register-legend">Who is registering?</legend>
+
+                        <div class="form-row-2">
+                            <div class="form-field"><label for="reg_name">Name</label><input type="text" id="reg_name" name="reg_name" required autocomplete="name"></div>
+                            <div class="form-field"><label for="reg_email">Email</label><input type="email" id="reg_email" name="reg_email" required autocomplete="email"></div>
+                        </div>
+                        <div class="form-row-2">
+                            <div class="form-field"><label for="reg_phone">Phone</label><input type="tel" id="reg_phone" name="reg_phone" autocomplete="tel"></div>
+                            <div class="form-field">
+                                <label for="reg_qty">Participants</label>
+                                <select id="reg_qty" name="reg_qty">
+                                    <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option>                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row-2">
+                            <div class="form-field">
+                                <label for="reg_level">Experience</label>
+                                <select id="reg_level" name="reg_level">
+                                    <option>New to hula</option>
+                                    <option>Some experience</option>
+                                    <option>Danced with a hālau before</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="reg_format">Preferred format</label>
+                                <select id="reg_format" name="reg_format">
+                                    <option>In person</option>
+                                    <option>Online (Zoom)</option>
+                                    <option>Either</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label class="register-agree register-senior">
+                            <input type="checkbox" name="reg_senior" id="reg_senior" value="1">
+                            <span>I am over 70 &mdash; apply the 50% discount on class tuition.</span>
+                        </label>
+                        <label class="register-agree register-scholarship">
+                            <input type="checkbox" name="reg_scholarship" id="reg_scholarship" value="1" >
+                            <span>I would like to request a scholarship. Nothing to pay now &mdash; Kumu June will be in touch.</span>
+                        </label>
+
+                        <div class="form-field">
+                            <label for="reg_notes">Anything we should know? <span class="form-optional">(optional)</span></label>
+                            <textarea id="reg_notes" name="reg_notes" rows="3"></textarea>
+                        </div>
+
+                        <div class="register-nav">
+                            <button type="button" class="btn btn-outline-green" data-prev>Back</button>
+                            <button type="button" class="btn btn-gold" data-next>Continue to payment</button>
+                        </div>
+                    </fieldset>
+
+                    <!-- ---------- Step 3: payment ---------- -->
+                    <fieldset class="register-step" data-step="3">
+                        <legend class="register-legend">How would you like to pay?</legend>
+
+                        <p class="register-next scholarship-note" hidden>You have requested a scholarship, so there is nothing to pay now. Complete your registration and Kumu June will be in touch.</p>
+                        <div class="choice-list choice-list--pay">
+                                                        <label class="choice">
+                                <input type="radio" name="reg_method" value="card"  checked='checked' required>
+                                <span class="choice-body">
+                                    <span class="choice-title">Card</span>
+                                    <span class="choice-meta">Visa · Mastercard · Amex · Apple Pay</span>
+                                </span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="reg_method" value="venmo"  required>
+                                <span class="choice-body">
+                                    <span class="choice-title">Venmo</span>
+                                    <span class="choice-meta">@HalauIKaPono</span>
+                                </span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="reg_method" value="zelle"  required>
+                                <span class="choice-body">
+                                    <span class="choice-title">Zelle</span>
+                                    <span class="choice-meta">june.tanoue@zlmc.org</span>
+                                </span>
+                            </label>
+                                                        <label class="choice">
+                                <input type="radio" name="reg_method" value="person"  required>
+                                <span class="choice-body">
+                                    <span class="choice-title">Pay at the studio</span>
+                                    <span class="choice-meta">Cash or check</span>
+                                </span>
+                            </label>
+                                                    </div>
+
+                        <label class="register-agree">
+                            <input type="checkbox" name="reg_agree" value="1" required>
+                            <span>I understand payment (unless a scholarship is arranged) is due before the first class or event, and that tuition is provisional until confirmed by the hālau.</span>
+                        </label>
+
+                        <div class="register-nav">
+                            <button type="button" class="btn btn-outline-green" data-prev>Back</button>
+                            <button type="submit" class="btn btn-gold btn-lg" data-submit-label="Complete registration" data-submit-label-card="Continue to secure payment">Continue to secure payment</button>
+                        </div>
+                        <p class="register-fineprint">Card payments are handled by Stripe on a secure page; we never see your card details. <strong>Test mode:</strong> nothing is charged.</p>
+                    </fieldset>
+
                 </div>
+
+                <!-- ---------- Live order summary ---------- -->
+                <aside class="register-side col-4 col-start-9" aria-live="polite">
+                    <span class="register-kicker">Your registration</span>
+                    <dl class="register-summary">
+                        <div><dt>Item</dt><dd data-sum="title">—</dd></div>
+                        <div><dt>Participants</dt><dd data-sum="qty">1</dd></div>
+                        <div><dt>Price</dt><dd data-sum="price">—</dd></div>
+                        <div data-sum-row="discount" hidden><dt>Over 70</dt><dd data-sum="discount">−50%</dd></div>
+                        <div data-sum-row="scholarship" hidden><dt>Scholarship</dt><dd>requested</dd></div>
+                        <div class="register-summary-total"><dt>Total</dt><dd data-sum="total">—</dd></div>
+                    </dl>
+                    <p class="register-note">Need help choosing? <a href="https://christiantype.github.io/halau-ikapono-demo/classes/">See the classes</a> or <a href="https://christiantype.github.io/halau-ikapono-demo/contact/">ask Kumu June</a>.</p>
+                </aside>
+
             </div>
-        </div>
+        </form>
 
         
     </div>
@@ -273,15 +492,15 @@ var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/
                     46 Lake Street<br>Oak Park, IL 60302
                 </address>
                 <a href="tel:7082976321" class="footer-link">708-297-6321</a>
-                <a href="mailto:&#105;n&#102;o&#64;&#122;lmc.or&#103;" class="footer-link">&#105;&#110;&#102;o&#64;&#122;lmc&#46;&#111;&#114;g</a>
+                <a href="mailto:&#106;&#117;&#110;&#101;&#46;ta&#110;&#111;ue&#64;&#122;lm&#99;.o&#114;&#103;" class="footer-link">&#106;&#117;n&#101;&#46;tano&#117;&#101;&#64;zl&#109;c.or&#103;</a>
             </div>
         </div>
 
-        <!-- Base row: copyright | ZLMC partner line | design credit. -->
+        <!-- Base row: copyright | ZLMC program line | design credit. -->
         <div class="grid-12 footer-base">
             <p class="footer-copy col-4">&copy; 2026 Hālau i Ka Pono</p>
             <div class="footer-affiliation col-4">
-                <span class="footer-eyebrow">A partner of</span>
+                <span class="footer-eyebrow">A program of</span>
                 <a href="https://zlmc.org" target="_blank" rel="noopener" class="footer-affiliation-logo" aria-label="Zen Life &amp; Meditation Center (opens in a new tab)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="119 27 791 90" role="img" aria-labelledby="zlmc-logo-title"><title id="zlmc-logo-title">Zen Life &amp; Meditation Center</title>
 <path fill="currentColor" d="M 229.914062 83.519531 L 246.484375 61.5 L 230.414062 61.5 L 230.414062 57.71875 L 251.65625 57.71875 L 251.65625 60.886719 L 235.140625 82.910156 L 251.9375 82.910156 L 251.9375 86.636719 L 229.914062 86.636719 Z M 229.914062 83.519531 "/>

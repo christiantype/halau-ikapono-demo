@@ -870,7 +870,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 /* The whole section is a solid sage field so it reads as one clear
    segment; the three peach panels sit inside it. */
 .home-classes {
-    background: var(--sage-700);
+    background: var(--gray-900);
     color: var(--white);
     padding-block: 6rem 7rem;
 }
@@ -897,7 +897,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 }
 
 .home-classes .btn-outline-green { border-color: var(--white); color: var(--white); }
-.home-classes .btn-outline-green:hover { background: var(--white); color: var(--sage-800); }
+.home-classes .btn-outline-green:hover { background: var(--white); color: var(--gray-900); }
 
 .program-panels { row-gap: var(--gutter); }
 
@@ -3702,4 +3702,36 @@ body.lightbox-open { overflow: hidden; }
     height: 100%;
     background: rgba(240, 90, 40, 0.08);
     border-inline: 1px solid rgba(240, 90, 40, 0.35);
+}
+
+/* ============================================================
+   REGISTER — confirmation states and the test checkout
+   ============================================================ */
+.register-done .register-steps { margin-bottom: 2.5rem; }
+.register-next--warn { color: var(--green-900); }
+.register-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+.register-actions--after { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--color-border); }
+.test-checkout { border: 1px solid var(--gray-900); padding: 2.5rem; }
+.test-checkout .register-done-title { font-size: var(--h-item); margin-bottom: 1.5rem; }
+.test-checkout-form { margin-top: 1.5rem; }
+.test-checkout-form input[readonly] { background: var(--gray-100); color: var(--gray-600); font-variant-numeric: tabular-nums; }
+
+
+/* The summary rows are flex, so the hidden attribute needs help. */
+.register-summary > div[hidden] { display: none; }
+
+.choice-list--pay[hidden], .scholarship-note[hidden] { display: none; }
+
+/* Weekly schedule: day appears once per group; rows are time | class | format */
+.weekly-intro { font-size: var(--text-base); color: var(--color-text-muted); margin: 0 0 1.5rem; }
+.weekly-row { grid-template-columns: 8rem 11rem 1fr 9rem; }
+.weekly-row--first:not(:first-child) { border-top: 1px solid var(--gray-900); }
+.weekly-class a { color: inherit; text-decoration: none; }
+.weekly-class a:hover { color: var(--green-900); }
+.weekly-class small { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); margin-left: 0.5rem; }
+.weekly-row--hybrid .weekly-type { color: var(--gold-700); }
+@media (max-width: 767px) {
+    .weekly-row { grid-template-columns: 1fr 1fr; row-gap: 0.15rem; }
+    .weekly-day { grid-column: 1 / -1; }
+    .weekly-class { grid-column: 1 / -1; }
 }
