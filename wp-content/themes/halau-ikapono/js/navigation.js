@@ -545,3 +545,15 @@ document.addEventListener('DOMContentLoaded', function () {
         paint();
     }
 });
+
+/* Scholarship request: the button opens the form in place. */
+document.querySelectorAll('.scholarship-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+        const form = document.getElementById(btn.getAttribute('aria-controls'));
+        if (!form) return;
+        form.hidden = false;
+        btn.setAttribute('aria-expanded', 'true');
+        const first = form.querySelector('input:not([type=hidden])');
+        if (first) first.focus({ preventScroll: true });
+    });
+});
