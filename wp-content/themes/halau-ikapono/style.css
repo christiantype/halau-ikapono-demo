@@ -4223,12 +4223,44 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
 }
 
 /* Kumu June's archival portrait under her name in the bio. */
-.bio-portrait { margin: 2.5rem 0 0; max-width: 22rem; }
-.bio-portrait img { display: block; width: 100%; height: auto; }
-@media (max-width: 768px) { .bio-portrait { max-width: 18rem; margin-top: 2rem; } }
+/* Full width of the label column (cols 1-4), square, so the row never
+   gets taller than the cards beside it; cropped to keep her whole face. */
+.bio-portrait { margin: 2.5rem 0 0; width: calc(100% * 5 / 4 + var(--gutter) / 4); aspect-ratio: 1 / 1; overflow: hidden; }
+.bio-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; }
+@media (max-width: 768px) { .bio-portrait { margin-top: 2rem; } }
 
 /* ʻŪniki: two archival photos side by side at one shared height (each
    grows by its own aspect ratio), under the three stages. */
 .bio-archive { display: flex; gap: var(--gutter); margin-top: 3rem; }
 .bio-archive img { flex-basis: 0; min-width: 0; width: 100%; height: auto; display: block; }
 @media (max-width: 40em) { .bio-archive { flex-direction: column; gap: 1rem; } }
+
+/* Bio opening: the archival duet photo behind June's name and story,
+   full bleed, washed into the band blue (luminosity over blue) and fading
+   out toward the next row, so the type stays legible. */
+.bio-section { overflow-x: clip; }
+.bio-row--head { position: relative; isolation: isolate; }
+.bio-backdrop {
+    position: absolute;
+    z-index: -1;
+    top: calc(-1 * var(--bio-pad-top, 7rem));
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    background: var(--blue-700);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+}
+.bio-backdrop img {
+    /* Full width of the band; anchored at the top so the dancer's head and
+       raised hand stay in frame (the mat at the foot is what gets cut). */
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: 50% 0;
+    mix-blend-mode: luminosity;
+    opacity: 0.32;
+}
+@media (max-width: 768px) { .bio-portrait { width: 100%; } }
