@@ -448,9 +448,11 @@ button { cursor: pointer; border: none; background: none; }
     position: fixed;
     inset: 0;
     display: grid;
-    /* The panel ends on the grid: the right edge of column 5. */
+    /* Photo left, panel right (under the close button). The panel's text
+       starts on the left edge of column 8; the panel reaches the window's
+       right edge. 25px = panel padding + frame; 2.5rem = text inset. */
     --col: calc((min(100vw, var(--container)) - 2 * var(--margin) - 11 * var(--gutter)) / 12);
-    grid-template-columns: calc((100vw - min(100vw, var(--container))) / 2 + var(--margin) + 5 * var(--col) + 4 * var(--gutter)) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) calc((100vw - min(100vw, var(--container))) / 2 + var(--margin) + 5 * var(--col) + 4 * var(--gutter) + 25px + 2.5rem);
     /* --menu-bg / --menu-fg are set per load and per open by
        js/navigation.js from a contrast-checked palette pair. */
     --menu-bg: var(--white);
@@ -469,6 +471,8 @@ button { cursor: pointer; border: none; background: none; }
 }
 
 .menu-panel {
+    grid-row: 1;
+    grid-column: 2;
     padding: 24px;
     height: 100%;
     overflow-y: auto;
@@ -496,8 +500,7 @@ button { cursor: pointer; border: none; background: none; }
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    /* Text starts on the page margin: 24px panel padding + 1px frame. */
-    padding: 2.5rem 2.5rem 2rem calc(var(--margin) - 25px);
+    padding: 2.5rem 2.5rem 2rem 2.5rem;
     min-height: 0;
 }
 
@@ -513,7 +516,7 @@ button { cursor: pointer; border: none; background: none; }
 
 .menu-list {
     list-style: none;
-    margin: 0 -2.5rem 0 calc(25px - var(--margin));
+    margin: 0 -2.5rem;
     padding: 0;
     border-top: 1px solid var(--menu-fg);
 }
@@ -526,7 +529,7 @@ button { cursor: pointer; border: none; background: none; }
     display: flex;
     align-items: baseline;
     gap: 1.25rem;
-    padding: 1.1rem 2.5rem 1.1rem calc(var(--margin) - 25px);
+    padding: 1.1rem 2.5rem;
     font-family: var(--font-serif);
     font-weight: 480;
     font-size: calc(clamp(1.5rem, 2.6vw, 2.25rem) * var(--type-scale));
@@ -583,6 +586,8 @@ button { cursor: pointer; border: none; background: none; }
 
 
 .menu-photo {
+    grid-row: 1;
+    grid-column: 1;
     position: relative;
     overflow: hidden;
     background: var(--menu-fg);
@@ -608,7 +613,11 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 
 @media (max-width: 1024px) {
     .nav-primary { grid-template-columns: 1fr; }
+    .menu-panel { grid-column: 1; }
     .menu-photo { display: none; }
+    .menu-main { padding-left: calc(var(--margin) - 25px); }
+    .menu-list { margin-left: calc(25px - var(--margin)); }
+    .menu-list a { padding-left: calc(var(--margin) - 25px); }
 }
 
 @media (max-width: 768px) {
