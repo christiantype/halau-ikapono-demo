@@ -953,7 +953,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .home-classes .btn-outline-green:hover { background: var(--white); color: var(--gray-900); }
 
 /* A stack of cards: each programme is one wide card on cols 2–11, set at
-   a slight angle, overlapping the one above and swaying like the event
+   a slight angle with clear space between, swaying like the event
    cards. The photo sits in its organic mask on the left and runs off the
    card's left edge, so the shape is clipped there. */
 .program-panels { row-gap: 0; }
@@ -973,7 +973,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     animation: card-sway 9s ease-in-out infinite;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
 }
-.program-panel + .program-panel { margin-top: -2.5rem; }
+.program-panel + .program-panel { margin-top: 3rem; }
 .program-panel:nth-child(2) { --tilt: 1deg; animation-duration: 10s; animation-delay: -3s; z-index: 1; }
 .program-panel:nth-child(3) { --tilt: -0.6deg; animation-duration: 8.5s; animation-delay: -6s; z-index: 2; }
 .program-panel:hover { animation-play-state: paused; }
@@ -1083,7 +1083,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     .program-panel > .program-panel-tags { margin-top: 1.5rem; }
     .program-panel > .program-panel-meta { margin-bottom: 0; }
     .program-panel-photo { width: 120%; margin: 0 0 0 -35%; min-height: 0; aspect-ratio: 1 / 1; }
-    .program-panel + .program-panel { margin-top: -1.5rem; }
+    .program-panel + .program-panel { margin-top: 2rem; }
 }
 @media (prefers-reduced-motion: reduce) { .program-panel { animation: none; } }
 
