@@ -952,23 +952,49 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .home-classes .btn-outline-green { border-color: var(--white); color: var(--white); }
 .home-classes .btn-outline-green:hover { background: var(--white); color: var(--gray-900); }
 
-.program-panels { row-gap: var(--gutter); }
+/* A stack of cards: each programme is one wide card on cols 2–11, set at
+   a slight angle, overlapping the one above and swaying like the event
+   cards. The photo sits in its organic mask on the left and runs off the
+   card's left edge, so the shape is clipped there. */
+.program-panels { row-gap: 0; }
 
 .program-panel {
+    --tilt: -1.2deg;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    align-items: center;
     background: var(--white);
     color: var(--gray-900);
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    transform: rotate(var(--tilt));
+    animation: card-sway 9s ease-in-out infinite;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
 }
+.program-panel + .program-panel { margin-top: -2.5rem; }
+.program-panel:nth-child(2) { --tilt: 1deg; animation-duration: 10s; animation-delay: -3s; z-index: 1; }
+.program-panel:nth-child(3) { --tilt: -0.6deg; animation-duration: 8.5s; animation-delay: -6s; z-index: 2; }
+.program-panel:hover { animation-play-state: paused; }
+.program-panel > :not(.program-panel-photo) { grid-column: 6 / span 4; }
+.program-panel > .program-panel-tags { margin-top: 3.5rem; }
+.program-panel > .program-panel-meta { margin-bottom: 3.5rem; }
 
 .program-panel-photo {
     display: block;
-    aspect-ratio: 4 / 5;
+    grid-column: 1 / span 5;
+    grid-row: 1 / span 5;
+    align-self: stretch;
+    position: relative;
+    width: 135%;
+    margin-left: -35%;
+    min-height: 30rem;
     background: var(--orange-500);
     overflow: hidden;
-    margin-bottom: 1.5rem;
 }
+/* The photo fills the card's height; it never sets it. */
+.program-panel-photo img { position: absolute; inset: 0; }
 
 /* Each panel's photo is masked in its own organic shape: large forms
    that fill the box with softly undulating edges (generated as smooth
@@ -1052,13 +1078,14 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 
 .programming-foot { margin-top: 3rem; text-align: center; }
 
-@media (max-width: 1024px) {
-    .program-panels > [class*="col-"] { grid-column: auto / span 6; }
-}
-
 @media (max-width: 768px) {
-    .program-panel { padding: 1.5rem; }
+    .program-panel { display: flex; flex-direction: column; align-items: stretch; padding: 0 1.5rem 2rem; }
+    .program-panel > .program-panel-tags { margin-top: 1.5rem; }
+    .program-panel > .program-panel-meta { margin-bottom: 0; }
+    .program-panel-photo { width: 120%; margin: 0 0 0 -35%; min-height: 0; aspect-ratio: 1 / 1; }
+    .program-panel + .program-panel { margin-top: -1.5rem; }
 }
+@media (prefers-reduced-motion: reduce) { .program-panel { animation: none; } }
 
 /* ============================================================
    HOME — EVENTS PREVIEW
