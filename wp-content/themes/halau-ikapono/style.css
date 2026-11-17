@@ -952,7 +952,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .home-classes .btn-outline-green { border-color: var(--white); color: var(--white); }
 .home-classes .btn-outline-green:hover { background: var(--white); color: var(--gray-900); }
 
-/* A stack of cards: each programme is one wide card on cols 2–11, set at
+/* A stack of cards: each programme is one card across all 12 columns, set at
    a slight angle with clear space between, swaying like the event
    cards. The photo sits in its organic mask on the left and runs off the
    card's left edge, so the shape is clipped there. */
@@ -962,7 +962,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     --tilt: -1.2deg;
     position: relative;
     display: grid;
-    grid-template-columns: repeat(10, minmax(0, 1fr));
+    grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--gutter);
     align-items: center;
     background: var(--white);
@@ -977,13 +977,13 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .program-panel:nth-child(2) { --tilt: 1deg; animation-duration: 10s; animation-delay: -3s; z-index: 1; }
 .program-panel:nth-child(3) { --tilt: -0.6deg; animation-duration: 8.5s; animation-delay: -6s; z-index: 2; }
 .program-panel:hover { animation-play-state: paused; }
-.program-panel > :not(.program-panel-photo) { grid-column: 6 / span 4; }
+.program-panel > :not(.program-panel-photo) { grid-column: 7 / span 5; }
 .program-panel > .program-panel-tags { margin-top: 3.5rem; }
 .program-panel > .program-panel-meta { margin-bottom: 3.5rem; }
 
 .program-panel-photo {
     display: block;
-    grid-column: 1 / span 5;
+    grid-column: 1 / span 6;
     grid-row: 1 / span 5;
     align-self: stretch;
     position: relative;
