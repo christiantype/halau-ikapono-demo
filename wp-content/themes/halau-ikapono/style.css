@@ -4158,3 +4158,63 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
 .home-events .event-row { border-bottom-color: rgba(23, 23, 19, 0.2); }
 .home-events .btn-outline-green { border-color: var(--gray-900); color: var(--gray-900); }
 .home-events .btn-outline-green:hover { background: var(--gray-900); color: var(--white); }
+
+/* Say it: the play button after a Hawaiian word. */
+.haw { white-space: nowrap; }
+.say-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.05em;
+    height: 1.05em;
+    margin-left: 0.25em;
+    padding: 0;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    vertical-align: 0.02em;
+    cursor: pointer;
+}
+.say-btn svg { width: 0.55em; height: 0.55em; margin-left: 0.08em; }
+.say-btn:hover,
+.say-btn.is-playing { background: currentColor; }
+.say-btn:hover svg,
+.say-btn.is-playing svg { color: var(--white); }
+.bio-section .say-btn:hover svg,
+.bio-section .say-btn.is-playing svg,
+.program-panel .say-btn:hover svg,
+.program-panel .say-btn.is-playing svg { color: var(--blue-700); }
+.say-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+/* Classes page: the three paths carry their home-page photo in the first
+   four columns, running to the window edge and the band's top and bottom,
+   and fading into the band colour on its right. Text moves to cols 5-9. */
+.class-band:has(.class-band-photo) { padding-block: 7rem; }
+.class-band-photo {
+    grid-column: 1 / span 4;
+    grid-row: 1 / span 3;
+    align-self: stretch;
+    position: relative;
+    margin: -7rem 0 -7rem calc(-1 * max(var(--margin), calc((100vw - var(--container)) / 2 + var(--margin))));
+    min-height: 26rem;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, #000 55%, transparent 100%);
+            mask-image: linear-gradient(to right, #000 55%, transparent 100%);
+}
+.class-band-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.class-band:has(.class-band-photo) .class-band-body { grid-column: 5 / span 5; grid-row: 1 / span 2; }
+.class-band:has(.class-band-photo) .class-band-levels { grid-row: 1; }
+.class-band:has(.class-band-photo) .class-band-action { grid-row: 2; }
+
+@media (max-width: 768px) {
+    .class-band-photo {
+        order: -1;
+        margin: -4rem calc(-1 * var(--margin)) 0;
+        min-height: 0;
+        aspect-ratio: 4 / 3;
+        -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+                mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+    }
+    .class-band:has(.class-band-photo) { padding-block: 4rem; }
+}

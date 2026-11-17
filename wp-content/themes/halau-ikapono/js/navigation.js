@@ -604,3 +604,98 @@ document.querySelectorAll('.scholarship-toggle').forEach((btn) => {
     window.addEventListener('resize', all);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(all);
 })();
+
+/* Say it: a small play button after the first appearance of each recorded
+   Hawaiian word (window.HALAU_SAY, from functions.php). The page is one
+   scope; Kumu June's bio is its own, so her bio gets every word it uses. */
+(function () {
+    const words = window.HALAU_SAY;
+    const main = document.getElementById('main');
+    if (!words || !words.length || !main) return;
+    const OK = "[\u02BB\u2018'\u2019]";
+    const plain = { 'ā': 'a', 'ē': 'e', 'ī': 'i', 'ō': 'o', 'ū': 'u', 'Ā': 'A', 'Ē': 'E', 'Ī': 'I', 'Ō': 'O', 'Ū': 'U' };
+    const toRe = (form) => {
+        let s = '';
+        for (const ch of form) {
+            if (ch === '\u02BB') s += OK + '?';
+            else if (plain[ch]) s += '[' + ch + plain[ch] + ']';
+            else if (ch === ' ') s += '\\s+';
+            else s += ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        // Single words never match inside a longer recorded phrase.
+        const guard = {
+            'pono': '(?<!ka\\s)', 'kumu': '', 'hula': '(?<!kumu\\s)(?<!h[\u0101a]lau\\s)', 'h\u0101lau': '', 'na\u02BBau': '(?<!ka\\s)',
+        }[form.toLowerCase()] || '';
+        const ahead = {
+            'kumu': '(?!\\s+hula)', 'hula': '(?!\\s+noho)', 'h\u0101lau': '(?!\\s+(i|hula)\\s)',
+        }[form.toLowerCase()] || '';
+        return new RegExp(guard + '(?<![\\p{L}\u02BB\u2018\u2019\'])' + s + '(?![\\p{L}])' + ahead, 'iu');
+    };
+    const list = words.map(([form, url]) => ({ form, url, re: toRe(form) }))
+        .sort((a, b) => b.form.length - a.form.length);
+    const SKIP = 'h1,h2,a,button,label,input,textarea,select,script,style,svg,nav,header,footer,.bio-terms,.haw,.hero,.site-logo,.say-btn';
+    const audio = new Audio();
+    let playing = null;
+    let queue = [];
+    const next = () => {
+        const url = queue.shift();
+        if (!url) { if (playing) playing.classList.remove('is-playing'); playing = null; return; }
+        audio.src = url; audio.currentTime = 0;
+        audio.play().catch(() => {});
+    };
+    const play = (btn) => {
+        if (playing) playing.classList.remove('is-playing');
+        queue = btn.dataset.urls.split(' ');
+        btn.classList.add('is-playing'); playing = btn;
+        next();
+    };
+    audio.addEventListener('ended', next);
+
+    const wrapFirst = (scope, item, exclude) => {
+        const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
+            acceptNode: (n) => {
+                const p = n.parentElement;
+                if (!p || p.closest(SKIP)) return NodeFilter.FILTER_REJECT;
+                if (exclude && exclude.contains(n)) return NodeFilter.FILTER_REJECT;
+                return item.re.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
+            },
+        });
+        const node = walker.nextNode();
+        if (!node) return;
+        const m = node.nodeValue.match(item.re);
+        const after = node.splitText(m.index);
+        after.splitText(m[0].length);
+        const span = document.createElement('span');
+        span.className = 'haw';
+        span.lang = 'haw';
+        after.parentNode.replaceChild(span, after);
+        span.appendChild(after);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'say-btn';
+        btn.setAttribute('aria-label', 'Hear Kumu June say ' + m[0]);
+        btn.innerHTML = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M3 2l5 3-5 3z" fill="currentColor"/></svg>';
+        btn.dataset.urls = item.url;
+        btn.addEventListener('click', () => play(btn));
+        span.appendChild(btn);
+    };
+    const bio = main.querySelector('.bio-section');
+    list.forEach((item) => {
+        wrapFirst(main, item, bio);
+        if (bio) wrapFirst(bio, item, null);
+    });
+    // Words side by side ("Maiki Aiu Lake, Kumu Hula") share one button at
+    // the end that plays them in order.
+    main.querySelectorAll('.haw').forEach((a) => {
+        const gap = a.nextSibling, b = gap && gap.nextSibling;
+        if (!gap || gap.nodeType !== 3 || !/^[\s,]*$/.test(gap.nodeValue)) return;
+        if (!b || !b.classList || !b.classList.contains('haw')) return;
+        const btnA = a.querySelector('.say-btn'), btnB = b.querySelector('.say-btn');
+        btnB.dataset.urls = btnA.dataset.urls + ' ' + btnB.dataset.urls;
+        btnB.setAttribute('aria-label', 'Hear Kumu June say ' + a.textContent.trim() + gap.nodeValue + b.textContent.trim());
+        btnA.remove();
+        a.appendChild(gap);
+        while (b.firstChild) a.appendChild(b.firstChild);
+        b.remove();
+    });
+})();
