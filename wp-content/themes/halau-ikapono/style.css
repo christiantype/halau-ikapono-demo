@@ -1848,12 +1848,12 @@ a.event-row { color: inherit; text-decoration: none; }
    ============================================================ */
 .bio-section {
     padding-block: 7rem;
-    background: var(--gray-900);
+    background: var(--blue-700);
     color: var(--white);
 }
 
 /* Rows: label left, content right, a hairline between rows (none above the first). */
-.bio-row { padding-block: 3.5rem; border-top: 1px solid var(--gray-700); align-items: start; }
+.bio-row { padding-block: 3.5rem; border-top: 1px solid rgba(248, 248, 248, 0.3); align-items: start; }
 .bio-row:first-child { border-top: 0; padding-top: 0; }
 .bio-row:last-child { padding-bottom: 0; }
 
@@ -1865,7 +1865,7 @@ a.event-row { color: inherit; text-decoration: none; }
     font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--orange-500);
+    color: var(--orange-200);
     margin: 0 0 0.75rem;
 }
 
@@ -1882,7 +1882,7 @@ a.event-row { color: inherit; text-decoration: none; }
     font-size: var(--text-xs);
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--blue-200);
+    color: var(--white);
     margin: 0;
 }
 
@@ -1895,7 +1895,7 @@ a.event-row { color: inherit; text-decoration: none; }
 }
 .bio-body p { margin: 0 0 1.25rem; }
 .bio-body p:last-child { margin-bottom: 0; }
-.bio-section a { color: var(--orange-500); }
+.bio-section a { color: var(--orange-200); }
 
 .bio-lead {
     font-family: var(--font-serif);
@@ -1912,14 +1912,14 @@ a.event-row { color: inherit; text-decoration: none; }
     flex-direction: column;
     gap: 0.5rem;
     padding: 1.75rem 2rem;
-    background: #26261f;
+    background: var(--blue-800);
     font-family: var(--font-sans);
 }
 .bio-card-year {
     font-size: var(--text-xs);
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--orange-500);
+    color: var(--orange-200);
 }
 .bio-card h4 {
     font-family: var(--font-sans);
@@ -1935,7 +1935,7 @@ a.event-row { color: inherit; text-decoration: none; }
 
 /* Press: the two reviews, one after the other */
 .bio-press { display: flex; flex-direction: column; gap: 2.5rem; }
-.bio-quote { margin: 0; padding-left: 1.5rem; border-left: 1px solid var(--orange-500); }
+.bio-quote { margin: 0; padding-left: 1.5rem; border-left: 1px solid var(--orange-200); }
 .bio-quote blockquote { margin: 0; }
 .bio-quote p {
     font-family: var(--font-serif);
@@ -1949,7 +1949,7 @@ a.event-row { color: inherit; text-decoration: none; }
     font-size: var(--text-xs);
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--blue-200);
+    color: var(--white);
     margin-top: 1.25rem;
 }
 
@@ -1973,7 +1973,7 @@ a.event-row { color: inherit; text-decoration: none; }
     font-size: calc(clamp(1.75rem, 3vw, 2.5rem) * var(--type-scale));
     font-weight: 480;
     line-height: 1;
-    color: var(--orange-500);
+    color: var(--orange-200);
     margin-bottom: 0.75rem;
 }
 .bio-stages strong { font-size: var(--text-lg); font-weight: 400; }
