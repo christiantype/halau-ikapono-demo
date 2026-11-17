@@ -410,6 +410,39 @@ document.addEventListener('DOMContentLoaded', function () {
         if (flow.querySelector('input[name="item"]:checked')) show(1);
     }
 
+    // ── No widows: tie each block's last two words together ──────
+    // (a no-break space), so a paragraph never ends on one word alone.
+    // Skipped when the pair is long enough to overflow a phone line.
+    document.querySelectorAll('main p, main li, main dd, main figcaption, main blockquote, main h1, main h2, main h3, main h4, .site-footer p').forEach(function (el) {
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        for (let i = nodes.length - 1; i >= 0; i--) {
+            const n = nodes[i];
+            const m = n.textContent.match(/^([\s\S]*\S)\s+(\S+\s*)$/);
+            if (!n.textContent.trim()) continue;
+            if (!m) return; // last word sits alone in its node (e.g. after a link): leave it
+            const tail = m[1].split(/\s/).pop() + ' ' + m[2].trim();
+            if (tail.length <= 22) n.textContent = m[1] + ' ' + m[2];
+            return;
+        }
+    });
+
+    // ── Pronunciation (About: Lāʻau Lapaʻau terms) ────────────────
+    let termAudio = null, termBtn = null;
+    document.querySelectorAll('.bio-term-play').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            if (termAudio) { termAudio.pause(); termAudio = null; }
+            if (termBtn) termBtn.classList.remove('is-playing');
+            if (termBtn === btn) { termBtn = null; return; }
+            termBtn = btn;
+            termAudio = new Audio(btn.dataset.audio);
+            btn.classList.add('is-playing');
+            termAudio.addEventListener('ended', function () { btn.classList.remove('is-playing'); if (termBtn === btn) termBtn = null; });
+            termAudio.play().catch(function () { btn.classList.remove('is-playing'); });
+        });
+    });
+
     // ── PayPal / Venmo buttons (page-register.php, ?paypal=REF) ──
     const ppBox = document.getElementById('paypal-buttons');
     if (ppBox && window.paypal && window.paypal.Buttons) {
