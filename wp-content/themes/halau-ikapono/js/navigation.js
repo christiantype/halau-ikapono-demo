@@ -573,3 +573,34 @@ document.querySelectorAll('.scholarship-toggle').forEach((btn) => {
     window.addEventListener('resize', fit);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
 })();
+
+/* Programme photos share one eye line: each image is placed (and scaled up
+   only as much as needed) so the lead dancer's eyes sit at the same height
+   in every card. data-eye="x y" gives the eyes as fractions of the photo. */
+(function () {
+    const EYE_LINE = 0.22;
+    const imgs = document.querySelectorAll('.program-panel-photo img[data-eye]');
+    if (!imgs.length) return;
+    let line = 0;
+    const place = (img) => {
+        const box = img.parentElement, w = box.clientWidth, h = box.clientHeight;
+        const t = line / h;
+        const iw = img.naturalWidth, ih = img.naturalHeight;
+        if (!w || !h || !iw) return;
+        const [ex, ey] = img.dataset.eye.split(' ').map(Number);
+        const r = iw / ih;
+        let H = Math.max(h, w / r, t * h / ey, h * (1 - t) / (1 - ey));
+        const W = H * r;
+        const left = Math.min(0, Math.max(w - W, w / 2 - ex * W));
+        const top = Math.min(0, Math.max(h - H, t * h - ey * H));
+        Object.assign(img.style, { inset: 'auto', left: left + 'px', top: top + 'px', width: W + 'px', height: H + 'px', maxWidth: 'none', objectFit: 'fill' });
+    };
+    // One line in pixels for the whole row: a share of the shortest photo area.
+    const all = () => {
+        line = EYE_LINE * Math.min(...[...imgs].map((i) => i.parentElement.clientHeight || Infinity));
+        imgs.forEach((img) => img.complete ? place(img) : img.addEventListener('load', () => place(img), { once: true }));
+    };
+    all();
+    window.addEventListener('resize', all);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(all);
+})();
