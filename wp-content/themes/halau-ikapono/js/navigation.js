@@ -279,21 +279,60 @@ document.addEventListener('DOMContentLoaded', function () {
             const qty = parseInt(qtySel.value, 10) || 1;
             sum('qty').textContent = qty;
             if (!chosen) { sum('title').textContent = '—'; sum('price').textContent = '—'; sum('total').textContent = '—'; return; }
-            const senior = flow.querySelector('#reg_senior');
-            const half = senior && senior.checked && chosen.dataset.senior === '1';
-            const price = (parseFloat(chosen.dataset.price) || 0) * (half ? 0.5 : 1);
-            const discRow = flow.querySelector('[data-sum-row="discount"]');
-            if (discRow) discRow.hidden = !half;
+            let price = parseFloat(chosen.dataset.price) || 0;
+            // Tuition rates and scholarship requests ask which classes; tuition is per dancer.
+            const forClasses = chosen.dataset.classes === '1';
+            const isGift = chosen.value === 'donation';
+            const hasTickets = chosen.dataset.tickets === '1';
+            const perDancer = forClasses || isGift || hasTickets || !!chosen.dataset.recurring;
+            const toggle = function (sel, show) { const el = flow.querySelector(sel); if (el) el.hidden = !show; };
+            toggle('[data-classes-field]', forClasses);
+            toggle('[data-qty-field]', !perDancer);
+            toggle('[data-sum-row="qty"]', !perDancer);
+            toggle('[data-dancer-fields]', !isGift);
+            if (perDancer) qtySel.value = '1';
+
+            // Ticketed event: one group of counts per event; only the chosen one is sent.
+            let ticketTotal = 0; const ticketParts = [];
+            flow.querySelectorAll('[data-tickets-for]').forEach(function (g) {
+                const on = g.dataset.ticketsFor === chosen.value;
+                g.hidden = !on;
+                g.querySelectorAll('input').forEach(function (i) {
+                    i.disabled = !on;
+                    const n = Math.max(0, parseInt(i.value, 10) || 0);
+                    if (on && n) { ticketTotal += n * (parseFloat(i.dataset.ticketPrice) || 0); ticketParts.push(n + ' × ' + i.dataset.ticketLabel); }
+                });
+            });
+
+            // Gift: the giver sets the amount; nothing about dancing is asked.
+            const amount = flow.querySelector('#reg_amount');
+            toggle('[data-amount-field]', isGift);
+            if (amount) amount.required = isGift;
+            if (isGift) price = Math.max(0, parseFloat(amount && amount.value) || 0);
+            const legend = flow.querySelector('[data-gift-legend]');
+            if (legend) { legend.dataset.defaultLegend = legend.dataset.defaultLegend || legend.textContent; legend.textContent = isGift ? legend.dataset.giftLegend : legend.dataset.defaultLegend; }
+            const agree = flow.querySelector('[data-agree]');
+            if (agree) { agree.hidden = isGift; agree.querySelector('input').required = !isGift; }
+
             const schol = flow.querySelector('#reg_scholarship');
+            const onlyScholarship = chosen.value === 'scholarship';
+            if (schol && onlyScholarship) schol.checked = true;
+            if (schol && isGift) schol.checked = false;
+            toggle('.register-scholarship', !onlyScholarship && !isGift);
             const wantsScholarship = !!(schol && schol.checked);
-            const scholRow = flow.querySelector('[data-sum-row="scholarship"]');
-            if (scholRow) scholRow.hidden = !wantsScholarship;
-            const payList = flow.querySelector('.choice-list--pay');
-            const scholNote = flow.querySelector('.scholarship-note');
-            if (payList) payList.hidden = wantsScholarship;
-            if (scholNote) scholNote.hidden = !wantsScholarship;
+            toggle('[data-sum-row="scholarship"]', wantsScholarship);
+            toggle('.choice-list--pay', !wantsScholarship);
+            toggle('.scholarship-note', wantsScholarship);
             flow.querySelectorAll('input[name="reg_method"]').forEach(function (i) { i.required = !wantsScholarship; });
+
+            if (hasTickets) {
+                sum('title').textContent = chosen.dataset.title + (ticketParts.length ? ' · ' + ticketParts.join(', ') : '');
+                sum('price').textContent = ticketParts.length ? money(ticketTotal) : '—';
+                sum('total').textContent = ticketParts.length ? money(ticketTotal) : '—';
+                return;
+            }
             sum('title').textContent = chosen.dataset.title;
+            if (isGift) { sum('price').textContent = price > 0 ? money(price) : '—'; sum('total').textContent = price > 0 ? money(price) : '—'; return; }
             sum('price').textContent = price > 0 ? money(price) + ' ' + chosen.dataset.unit : chosen.dataset.unit;
             sum('total').textContent = price > 0 ? money(price * qty) + (chosen.dataset.unit.indexOf('per') === 0 ? ' ' + chosen.dataset.unit : '') : 'Free';
         };
@@ -312,6 +351,20 @@ document.addEventListener('DOMContentLoaded', function () {
             const fields = Array.from(step.querySelectorAll('input, select, textarea'));
             const radios = fields.filter(function (f) { return f.type === 'radio' && f.required; });
             if (radios.length && !radios.some(function (r) { return r.checked; })) { radios[0].focus(); return false; }
+            // Ticketed event: at least one ticket.
+            const tg = step.querySelector('[data-tickets-for]:not([hidden])');
+            if (tg) {
+                const inputs = Array.from(tg.querySelectorAll('input'));
+                const n = inputs.reduce(function (s, i) { return s + (parseInt(i.value, 10) || 0); }, 0);
+                if (!n) { inputs[0].setCustomValidity('Choose at least one ticket.'); inputs[0].reportValidity(); inputs[0].setCustomValidity(''); return false; }
+            }
+            // Step 1: nothing chosen → say so instead of doing nothing.
+            const need = step.querySelector('[data-need-choice]');
+            if (need) {
+                const picked = !!flow.querySelector('input[name="item"]:checked');
+                need.hidden = picked;
+                if (!picked) return false;
+            }
             for (const f of fields) {
                 if (f.type === 'radio') continue;
                 if (!f.checkValidity()) { f.reportValidity(); return false; }
@@ -326,6 +379,15 @@ document.addEventListener('DOMContentLoaded', function () {
             b.addEventListener('click', function () { show(at - 1); });
         });
         flow.addEventListener('change', refresh);
+        flow.addEventListener('input', function (e) { if (e.target.matches('#reg_amount, [data-ticket-price]')) refresh(); });
+        flow.querySelectorAll('[data-amount]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                const amount = flow.querySelector('#reg_amount');
+                amount.value = b.dataset.amount;
+                flow.querySelectorAll('[data-amount]').forEach(function (x) { x.classList.toggle('is-picked', x === b); });
+                refresh();
+            });
+        });
         // Submit button says where it leads: Stripe for card, done otherwise.
         const submit = flow.querySelector('[data-submit-label]');
         const relabel = function () {
@@ -334,7 +396,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const freeItem = chosen && !(parseFloat(chosen.dataset.price) > 0);
             const schol = flow.querySelector('#reg_scholarship');
             const wantsScholarship = !!(schol && schol.checked);
-            if (submit) submit.textContent = (m && m.value === 'card' && !freeItem && !wantsScholarship) ? submit.dataset.submitLabelCard : submit.dataset.submitLabel;
+            const isGift = chosen && chosen.value === 'donation';
+            const payable = (!freeItem || isGift || (chosen && chosen.dataset.tickets === '1')) && !wantsScholarship;
+            if (submit) submit.textContent = (m && payable && m.value === 'card') ? submit.dataset.submitLabelCard : ((m && payable && m.value === 'paypal') ? submit.dataset.submitLabelPaypal : (isGift ? 'Complete gift' : submit.dataset.submitLabel));
         };
         flow.addEventListener('change', relabel);
         relabel();
@@ -344,6 +408,33 @@ document.addEventListener('DOMContentLoaded', function () {
         refresh();
         // Preselected item (from ?event= / ?class=) skips straight to details.
         if (flow.querySelector('input[name="item"]:checked')) show(1);
+    }
+
+    // ── PayPal / Venmo buttons (page-register.php, ?paypal=REF) ──
+    const ppBox = document.getElementById('paypal-buttons');
+    if (ppBox && window.paypal && window.paypal.Buttons) {
+        const ppError = document.getElementById('paypal-error');
+        const post = function (url, body) {
+            return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+                .then(function (r) { return r.json(); });
+        };
+        window.paypal.Buttons({
+            style: { layout: 'vertical', shape: 'rect', label: 'pay' },
+            createOrder: function () {
+                return post(ppBox.dataset.order, { ref: ppBox.dataset.ref }).then(function (d) {
+                    if (!d.id) throw new Error(d.error || 'order');
+                    return d.id;
+                });
+            },
+            onApprove: function (data, actions) {
+                return post(ppBox.dataset.capture, { ref: ppBox.dataset.ref, orderID: data.orderID }).then(function (d) {
+                    if (d.restart) return actions.restart();
+                    if (d.redirect) { window.location.href = d.redirect; return; }
+                    throw new Error(d.error || 'capture');
+                });
+            },
+            onError: function () { if (ppError) ppError.hidden = false; }
+        }).render(ppBox);
     }
 
     // ── Dev grid overlay — press "G" to toggle ─────────────────
