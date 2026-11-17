@@ -4159,28 +4159,33 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
 .home-events .btn-outline-green { border-color: var(--gray-900); color: var(--gray-900); }
 .home-events .btn-outline-green:hover { background: var(--gray-900); color: var(--white); }
 
-/* Say it: a small play mark after a Hawaiian word. Just the triangle,
-   raised a little like a footnote; a ring appears only on hover or while
-   it plays. */
+/* Say it: a small play mark after a Hawaiian word, raised a little like a
+   footnote. The ring is soft (the text colour at 40%) and goes full
+   strength on hover or while it plays. The triangle is centred on its
+   centroid, not its box, so it sits optically in the middle. */
 .haw { white-space: nowrap; }
+/* Sized in ex (the neighbouring text's x-height): the triangle is exactly
+   one x-height tall and sits on the baseline, the ring is twice that and
+   centred on the same line. The path is shifted so its centroid, not its
+   box, is in the middle. */
 .say-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 0.95em;
-    height: 0.95em;
-    margin-left: 0.1em;
+    box-sizing: border-box;
+    width: 2ex;
+    height: 2ex;
+    margin-left: 0.3ex;
     padding: 0;
-    border: 1px solid transparent;
+    border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
     border-radius: 50%;
     background: transparent;
     color: inherit;
-    vertical-align: 0.35em;
-    font-size: 0.75em;
+    vertical-align: 0;
     cursor: pointer;
     transition: border-color var(--ease-fast);
 }
-.say-btn svg { width: 0.6em; height: 0.6em; margin-left: 0.08em; }
+.say-btn svg { width: 1ex; height: 1ex; overflow: visible; display: block; }
 .say-btn:hover,
 .say-btn.is-playing { border-color: currentColor; }
 .say-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
@@ -4221,3 +4226,9 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
 .bio-portrait { margin: 2.5rem 0 0; max-width: 22rem; }
 .bio-portrait img { display: block; width: 100%; height: auto; }
 @media (max-width: 768px) { .bio-portrait { max-width: 18rem; margin-top: 2rem; } }
+
+/* ʻŪniki: two archival photos side by side at one shared height (each
+   grows by its own aspect ratio), under the three stages. */
+.bio-archive { display: flex; gap: var(--gutter); margin-top: 3rem; }
+.bio-archive img { flex-basis: 0; min-width: 0; width: 100%; height: auto; display: block; }
+@media (max-width: 40em) { .bio-archive { flex-direction: column; gap: 1rem; } }
