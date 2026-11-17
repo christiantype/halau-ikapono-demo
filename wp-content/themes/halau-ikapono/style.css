@@ -1087,7 +1087,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 }
 
 .home-events .section-heading { color: var(--white); }
-.home-events .events-list { border-top-color: var(--white); }
+.home-events .events-list { border-top: 0; }
 .home-events .event-row { border-bottom-color: rgba(248, 248, 248, 0.35); }
 .home-events .event-row:hover { background: transparent; }
 .home-events .event-date-box,
@@ -1102,7 +1102,6 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .events-list {
     display: flex;
     flex-direction: column;
-    border-top: 1px solid var(--orange-800);
 }
 
 a.event-row { color: inherit; text-decoration: none; }
