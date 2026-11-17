@@ -557,3 +557,19 @@ document.querySelectorAll('.scholarship-toggle').forEach((btn) => {
         if (first) first.focus({ preventScroll: true });
     });
 });
+
+/* Programme cards: tell each card how tall its text block is, so the
+   photo's fade ends exactly where the label begins. */
+(function () {
+    const cards = document.querySelectorAll('.program-panel');
+    if (!cards.length) return;
+    const fit = () => cards.forEach((card) => {
+        const first = card.querySelector('.program-panel-tags');
+        if (!first) return;
+        const zone = card.offsetHeight - first.offsetTop + 16;
+        card.style.setProperty('--text-zone', zone + 'px');
+    });
+    fit();
+    window.addEventListener('resize', fit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+})();
