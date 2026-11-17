@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const phone = window.matchMedia('(max-width: 768px)');
         let saved = null;
         try { saved = localStorage.getItem('halau-gallery-view'); } catch (e) {}
-        setView(phone.matches ? 'grid' : (saved === 'grid' ? 'grid' : 'slideshow'));
+        setView('grid');
         phone.addEventListener('change', function (e) { if (e.matches) setView('grid'); });
     }
 
