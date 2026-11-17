@@ -674,7 +674,7 @@ document.querySelectorAll('.scholarship-toggle').forEach((btn) => {
         btn.type = 'button';
         btn.className = 'say-btn';
         btn.setAttribute('aria-label', 'Hear Kumu June say ' + m[0]);
-        btn.innerHTML = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2.4 0v10L10.4 5z" fill="currentColor"/></svg>';
+        btn.innerHTML = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M2.9 0.5V9.5L9.5 5.45Q9.9 5 9.5 4.55Z" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/></svg>';
         btn.dataset.urls = item.url;
         btn.addEventListener('click', () => play(btn));
         span.appendChild(btn);
