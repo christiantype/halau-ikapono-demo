@@ -4159,32 +4159,30 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
 .home-events .btn-outline-green { border-color: var(--gray-900); color: var(--gray-900); }
 .home-events .btn-outline-green:hover { background: var(--gray-900); color: var(--white); }
 
-/* Say it: the play button after a Hawaiian word. */
+/* Say it: a small play mark after a Hawaiian word. Just the triangle,
+   raised a little like a footnote; a ring appears only on hover or while
+   it plays. */
 .haw { white-space: nowrap; }
 .say-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.05em;
-    height: 1.05em;
-    margin-left: 0.25em;
+    width: 0.95em;
+    height: 0.95em;
+    margin-left: 0.1em;
     padding: 0;
-    border: 1px solid currentColor;
+    border: 1px solid transparent;
     border-radius: 50%;
     background: transparent;
     color: inherit;
-    vertical-align: 0.02em;
+    vertical-align: 0.35em;
+    font-size: 0.75em;
     cursor: pointer;
+    transition: border-color var(--ease-fast);
 }
-.say-btn svg { width: 0.55em; height: 0.55em; margin-left: 0.08em; }
+.say-btn svg { width: 0.6em; height: 0.6em; margin-left: 0.08em; }
 .say-btn:hover,
-.say-btn.is-playing { background: currentColor; }
-.say-btn:hover svg,
-.say-btn.is-playing svg { color: var(--white); }
-.bio-section .say-btn:hover svg,
-.bio-section .say-btn.is-playing svg,
-.program-panel .say-btn:hover svg,
-.program-panel .say-btn.is-playing svg { color: var(--blue-700); }
+.say-btn.is-playing { border-color: currentColor; }
 .say-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 
 /* Classes page: the three paths carry their home-page photo in the first
