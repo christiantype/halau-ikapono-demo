@@ -4185,9 +4185,8 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
     cursor: pointer;
     transition: border-color var(--ease-fast);
 }
-/* Drawn like an Ojuju letter: a monoline outline at the face's stem
-   weight (a tenth of the x-height at wght 480), with the point softened
-   and cut flat the way Ojuju's "v" ends. */
+/* Drawn with contrast, like a brushed letter: a heavy back stroke, hairline
+   diagonals, gently bowed sides and a softened point. */
 .say-btn svg { width: 1ex; height: 1ex; overflow: visible; display: block; }
 .say-btn:hover,
 .say-btn.is-playing { border-color: currentColor; }
