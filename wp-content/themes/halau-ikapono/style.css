@@ -4216,3 +4216,8 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
     }
     .class-band:has(.class-band-photo) { padding-block: 4rem; }
 }
+
+/* Kumu June's archival portrait under her name in the bio. */
+.bio-portrait { margin: 2.5rem 0 0; max-width: 22rem; }
+.bio-portrait img { display: block; width: 100%; height: auto; }
+@media (max-width: 768px) { .bio-portrait { max-width: 18rem; margin-top: 2rem; } }
