@@ -93,7 +93,7 @@ Text Domain: halau-ikapono
 
     --text-xs:   0.75rem;
     --text-sm:   0.875rem;
-    --text-base: 1rem;
+    --text-base: 1.125rem; /* 18px (was 16px, Nov 2026) */
     --text-lg:   1.125rem;
     --text-xl:   1.25rem;
     --text-2xl:  1.5rem;
@@ -754,7 +754,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .hero-tagline {
     font-family: var(--font-sans);
     font-weight: 400;
-    font-size: clamp(0.875rem, 1.11vw, 16px);
+    font-size: clamp(0.875rem, 1.25vw, 18px);
     line-height: var(--figma-lh-body);
     letter-spacing: -0.01em;
     color: #fff;
@@ -804,7 +804,8 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     aspect-ratio: 1 / 1;   /* node 1:60 is a 505x505 frame ... */
 }
 
-.home-about-flower img {
+.home-about-flower img,
+.home-about-flower .flower-art {
     display: block;
     /* ... and the artwork inside it is 356.104 x 244, centred. Sizing the
        leaf as a fraction of the frame keeps that relationship at any width. */
@@ -817,8 +818,25 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     will-change: transform;
 }
 
+/* Each flower sways and breathes on its own, out of step with the other,
+   inside the scroll rotation of the whole artwork. */
+.home-about-flower .flower-art { overflow: visible; }
+.flower-orange,
+.flower-green {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    animation: flower-sway 6s ease-in-out infinite;
+}
+.flower-green { animation-duration: 7.5s; animation-delay: -2.5s; animation-direction: reverse; }
+@keyframes flower-sway {
+    0%, 100% { transform: rotate(-3deg) scale(1); }
+    50%      { transform: rotate(3deg) scale(1.04); }
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .home-about-flower img { transform: none !important; }
+    .home-about-flower img,
+    .home-about-flower .flower-art { transform: none !important; }
+    .flower-orange, .flower-green { animation: none; }
 }
 
 /* H2 style: Alegreya Regular 36, letter-spacing -1% */
@@ -838,7 +856,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .home-about-body {
     font-family: var(--font-sans);
     font-weight: 400;
-    font-size: clamp(0.875rem, 1.11vw, 16px);
+    font-size: clamp(0.875rem, 1.25vw, 18px);
     line-height: var(--figma-lh-body);
     letter-spacing: -0.01em;
     color: var(--figma-green);
@@ -2328,7 +2346,7 @@ body.lightbox-open { overflow: hidden; }
     scroll-margin-top: var(--header-h);
 }
 
-.class-band--basics  { background: var(--green-800); color: var(--gray-900); }
+.class-band--basics  { background: var(--green-500); color: var(--gray-900); }
 .class-band--auana   { background: var(--gold-700);  color: var(--white); }
 .class-band--kahiko  { background: var(--sage-700);  color: var(--white); }
 .class-band--chair   { background: var(--gold-100);  color: var(--gold-900); }

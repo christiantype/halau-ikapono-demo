@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ── About-band flower: subtle rotation driven by scroll position ──
     // Maps the band's travel through the viewport onto a small rotation
     // sweep, so the flower turns a few degrees as you scroll past it.
-    const flowerArt = document.querySelector('.home-about-flower img');
+    const flowerArt = document.querySelector('.home-about-flower .flower-art, .home-about-flower img');
     const flowerBand = flowerArt && flowerArt.closest('.home-about');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
