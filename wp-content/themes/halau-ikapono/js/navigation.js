@@ -593,7 +593,7 @@ document.querySelectorAll('.scholarship-toggle').forEach((btn) => {
         const W = H * r;
         const left = Math.min(0, Math.max(w - W, w / 2 - ex * W));
         const top = Math.min(0, Math.max(h - H, t * h - ey * H));
-        Object.assign(img.style, { inset: 'auto', left: left + 'px', top: top + 'px', width: W + 'px', height: H + 'px', maxWidth: 'none', objectFit: 'fill' });
+        Object.assign(img.style, { inset: 'auto', left: Math.floor(left) + 'px', top: Math.floor(top) + 'px', width: Math.ceil(W) + 2 + 'px', height: Math.ceil(H) + 2 + 'px', maxWidth: 'none', objectFit: 'fill' });
     };
     // One line in pixels for the whole row: a share of the shortest photo area.
     const all = () => {
