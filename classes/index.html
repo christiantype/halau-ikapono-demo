@@ -307,15 +307,43 @@ var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/
         <div class="grid-12 classes-enroll">
             <div class="col-8">
                 <h3>Money is never a reason not to dance</h3>
-                <p>Scholarships are available for every class &mdash; request one when you register, no questions asked. Kūpuna (elders 70 and older) receive 50% off all class tuition.</p>
-                <div class="classes-enroll-actions">
-                    <a href="https://christiantype.github.io/halau-ikapono-demo/register/" class="btn btn-gold btn-lg">Register</a>
-                    <a href="https://christiantype.github.io/halau-ikapono-demo/tuition/" class="btn btn-outline-green btn-lg">Tuition</a>
-                    <a href="https://christiantype.github.io/halau-ikapono-demo/register/scholarship/" class="btn btn-outline-green btn-lg">Request a scholarship</a>
-                    <a href="https://christiantype.github.io/halau-ikapono-demo/donate/" class="btn btn-outline-green btn-lg">Donate to scholarships</a>
-                    <a href="https://christiantype.github.io/halau-ikapono-demo/events/#schedule" class="btn btn-outline-green btn-lg">Weekly schedule</a>
-                </div>
+                <p>Scholarships are available for every class, no questions asked. Kūpuna (elders 70 and older) receive 50% off all class tuition. Want to help someone dance? <a href="https://christiantype.github.io/halau-ikapono-demo/donate/">Donate to the scholarship fund</a>.</p>
             </div>
+            <div class="col-8" id="scholarship">
+                                <form class="halau-form" action="#" onsubmit="alert('Demo only — the form is disabled on this preview.'); return false;" method="post">
+                    <input type="hidden" name="action" value="halau_contact">
+                    <input type="hidden" name="contact_subject" value="Scholarship">
+                    <input type="hidden" name="return_anchor" value="scholarship">
+                    <input type="hidden" id="halau_nonce" name="halau_nonce" value="2481149c54" /><input type="hidden" name="_wp_http_referer" value="/classes/" />                    <div class="form-row-2">
+                        <div class="form-field">
+                            <label for="sch_name">Name</label>
+                            <input type="text" id="sch_name" name="contact_name" required autocomplete="name">
+                        </div>
+                        <div class="form-field">
+                            <label for="sch_email">Email</label>
+                            <input type="email" id="sch_email" name="contact_email" required autocomplete="email">
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="sch_class">Class</label>
+                        <select id="sch_class" name="contact_class">
+                                                        <option value="Hula Basics">Hula Basics</option>
+                                                        <option value="Modern Auana">Modern Auana</option>
+                                                        <option value="Ancient Kahiko">Ancient Kahiko</option>
+                                                        <option value="Children&#039;s Hula">Children&#039;s Hula</option>
+                                                        <option value="Chair Hula">Chair Hula</option>
+                                                        <option value="Not sure yet">Not sure yet</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="sch_message">Anything you'd like Kumu June to know <span class="form-optional">(optional)</span></label>
+                        <textarea id="sch_message" name="contact_message" rows="4"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-gold btn-lg">Request a scholarship</button>
+                    </div>
+                </form>
+                            </div>
         </div>
 
     </div>
@@ -353,7 +381,7 @@ var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/
                     46 Lake Street<br>Oak Park, IL 60302
                 </address>
                 <a href="tel:7082976321" class="footer-link">708-297-6321</a>
-                <a href="mailto:&#106;u&#110;&#101;&#46;&#116;&#97;&#110;oue&#64;&#122;&#108;mc.&#111;rg" class="footer-link">&#106;u&#110;e.tanou&#101;&#64;zl&#109;c&#46;o&#114;&#103;</a>
+                <a href="mailto:j&#117;&#110;e.ta&#110;&#111;&#117;&#101;&#64;&#122;&#108;&#109;&#99;.o&#114;&#103;" class="footer-link">&#106;un&#101;&#46;&#116;&#97;noue&#64;zlmc&#46;&#111;&#114;g</a>
             </div>
         </div>
 
