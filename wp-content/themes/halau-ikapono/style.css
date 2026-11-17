@@ -46,6 +46,13 @@ Text Domain: halau-ikapono
     /* One knob for every font size on the site (Nov 2026: +12.5%). The
        logo and the html root (rem base, so spacing) are not scaled. */
     --type-scale: 1.125;
+    /* Motion: one tempo for the whole site. Every movement is a whole
+       number of beats, so the sway, the light and the flowers keep time
+       together. 1 beat = 1s (60 bpm); set this to the ipu tempo June
+       teaches and everything follows. A phrase is 8 beats. */
+    --beat: 1s;
+    --phrase: calc(var(--beat) * 8);
+    --sway-ease: cubic-bezier(0.45, 0, 0.55, 1);
     /* Accent 1 — Bird Orange (#F05A28), anchored at -800 */
     --orange-950: #6e3421;
     --orange-900: #a44728;
@@ -360,7 +367,6 @@ button { cursor: pointer; border: none; background: none; }
     background: var(--color-accent-dark);
     border-color: var(--color-accent-dark);
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(49,85,166,0.35);
 }
 
 .btn-outline-green {
@@ -639,18 +645,23 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     gap: 5px;
     width: 38px;
     height: 38px;
-    padding: 8px;
-    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    /* Always a solid disc with dark bars, so it reads over any section
+       (photo, blue, orange, black) and matches the close button. */
+    background: var(--white);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--gray-900);
     transition: background var(--ease-fast);
 }
 
 .hamburger:hover { background: var(--gray-100); }
+.site-header .hamburger span,
+.site-header--over-dark .hamburger span,
+.site-header--over-dark.is-scrolled .hamburger span { background: var(--gray-900); }
+.site-header--over-dark .hamburger:hover { background: var(--gray-100); }
 
 /* Over a dark hero the bars go white, then back to dark once the
    header has scrolled past it onto the light page body. */
-.site-header--over-dark .hamburger span { background: var(--white); }
-.site-header--over-dark .hamburger:hover { background: rgba(255,255,255,0.15); }
-.site-header--over-dark.is-scrolled .hamburger span { background: var(--gray-700); }
 .site-header--over-dark.is-scrolled .hamburger:hover { background: var(--gray-100); }
 
 /* Menu open — the X sits on the cream panel (or the photo, on wide screens),
@@ -709,7 +720,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     height: 100%;
     object-fit: cover;
     transform-origin: 50% 15%;
-    animation: hero-drift 40s ease-in-out infinite alternate;
+    animation: hero-drift calc(var(--phrase) * 4) var(--sway-ease) infinite alternate;
 }
 
 /* Living light. Each layer is screened over the photo so it only ever
@@ -723,7 +734,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     width: 70vmax; height: 70vmax;
     margin: -35vmax 0 0 -35vmax;
     background: radial-gradient(circle, rgba(255, 250, 225, 0.85) 0%, rgba(255, 228, 150, 0.45) 14%, rgba(255, 200, 90, 0.12) 34%, rgba(255, 200, 90, 0) 60%);
-    animation: hero-sun 7s ease-in-out infinite;
+    animation: hero-sun var(--phrase) var(--sway-ease) infinite;
 }
 .hero-beam {
     left: 50%; top: -30%;
@@ -732,23 +743,23 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     filter: blur(18px);
     transform-origin: 50% 0;
     transform: rotate(38deg);
-    animation: hero-beam 11s ease-in-out infinite;
+    animation: hero-beam calc(var(--phrase) * 2) var(--sway-ease) infinite;
 }
 .hero-beam--2 {
     width: 9vmax; left: 56%;
     opacity: 0.6;
-    animation-duration: 15s; animation-delay: -6s;
+    animation-delay: calc(var(--phrase) * -1);
 }
 .hero-leak { border-radius: 50%; filter: blur(40px); }
 .hero-leak--warm {
     left: -18%; top: -10%; width: 60vw; height: 80vh;
     background: radial-gradient(closest-side, rgba(255, 170, 40, 0.55), rgba(255, 170, 40, 0));
-    animation: hero-leak 13s ease-in-out infinite;
+    animation: hero-leak calc(var(--phrase) * 2) var(--sway-ease) infinite;
 }
 .hero-leak--green {
     right: -15%; top: 5%; width: 55vw; height: 90vh;
     background: radial-gradient(closest-side, rgba(200, 230, 90, 0.35), rgba(200, 230, 90, 0));
-    animation: hero-leak 17s ease-in-out infinite reverse;
+    animation: hero-leak calc(var(--phrase) * 2) var(--sway-ease) infinite reverse;
 }
 
 @keyframes hero-drift { from { transform: scale(1); } to { transform: scale(1.07) translateX(-1%); } }
@@ -869,9 +880,9 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .flower-green {
     transform-box: fill-box;
     transform-origin: 50% 50%;
-    animation: flower-sway 6s ease-in-out infinite;
+    animation: flower-sway var(--phrase) var(--sway-ease) infinite;
 }
-.flower-green { animation-duration: 7.5s; animation-delay: -2.5s; animation-direction: reverse; }
+.flower-green { animation-delay: calc(var(--beat) * -4); }
 @keyframes flower-sway {
     0%, 100% { transform: rotate(-3deg) scale(1); }
     50%      { transform: rotate(3deg) scale(1.04); }
@@ -979,10 +990,9 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     background: var(--white);
     color: var(--gray-900);
     transform: rotate(var(--tilt));
-    animation: card-sway 9s ease-in-out infinite;
 }
-.program-panel:nth-child(2) { --tilt: 1deg; animation-duration: 10s; animation-delay: -3s; }
-.program-panel:nth-child(3) { --tilt: -0.6deg; animation-duration: 8.5s; animation-delay: -6s; }
+.program-panel:nth-child(2) { --tilt: 1deg; }
+.program-panel:nth-child(3) { --tilt: -0.6deg; }
 .program-panel:hover { animation-play-state: paused; }
 
 .program-panel-photo {
@@ -2014,7 +2024,7 @@ a.event-row { color: inherit; text-decoration: none; }
     inset: -4%;
     z-index: -2;
     background: url(assets/images/zlmc-candlelight.webp) center 45% / cover no-repeat;
-    animation: zen-drift 40s ease-in-out infinite alternate;
+    animation: zen-drift calc(var(--phrase) * 4) var(--sway-ease) infinite alternate;
 }
 .bio-band--zen::after {
     content: "";
@@ -2338,20 +2348,30 @@ body.lightbox-open { overflow: hidden; }
     text-decoration: none;
     transform: rotate(var(--tilt));
     transform-origin: 50% 0;
-    animation: card-sway 7s ease-in-out infinite;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    transition: transform 0.4s ease;
 }
-.event-full-row:nth-child(3n+2) { --tilt: 1.2deg; animation-duration: 8s; animation-delay: -2s; }
-.event-full-row:nth-child(3n)   { --tilt: -0.7deg; animation-duration: 9s; animation-delay: -4s; }
+.event-full-row:nth-child(3n+2) { --tilt: 1.2deg; }
+.event-full-row:nth-child(3n)   { --tilt: -0.7deg; }
 .events-past .event-full-row { background: var(--gray-100); color: var(--gray-900); }
 
+/* Kaholo: over one 8-beat phrase the card steps right, settles, steps
+   left, settles, its weight shifting with each step (a slight lean
+   toward the step). Cards in a row follow one beat apart, like a line
+   of dancers taking the step from the one in front (see --i). */
 @keyframes card-sway {
-    0%, 100% { transform: rotate(var(--tilt)); }
-    50%      { transform: rotate(calc(var(--tilt) * -0.4)) translateY(-4px); }
+    0%, 100% { transform: translateX(-5px) rotate(calc(var(--tilt) - 0.5deg)); }
+    25%, 50% { transform: translateX(5px)  rotate(calc(var(--tilt) + 0.5deg)); }
+    75%      { transform: translateX(-5px) rotate(calc(var(--tilt) - 0.5deg)); }
 }
+.program-panel, .event-full-row, .weekly-day-card {
+    animation: card-sway var(--phrase) var(--sway-ease) infinite;
+    animation-delay: calc(var(--i, 0) * var(--beat));
+}
+.program-panel:nth-child(2), .weekly-day-card:nth-child(2), .event-full-row:nth-child(3n+2) { --i: 1; }
+.program-panel:nth-child(3), .weekly-day-card:nth-child(3), .event-full-row:nth-child(3n)   { --i: 2; }
 
 .event-full-row:hover,
-.event-full-row:focus-visible { animation-play-state: paused; box-shadow: 0 18px 40px rgba(23, 23, 19, 0.18); }
+.event-full-row:focus-visible { animation-play-state: paused; }
 .event-full-row:hover .info h3 { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 
 .event-full-row .date-block { color: inherit; }
@@ -2674,7 +2694,6 @@ body.lightbox-open { overflow: hidden; }
     border: 1px solid var(--color-border);
     border-radius: var(--radius-xl);
     overflow: hidden;
-    box-shadow: var(--shadow);
     background: var(--gray-50);
     min-height: 600px;
     display: flex;
@@ -3097,9 +3116,9 @@ body.lightbox-open { overflow: hidden; }
     animation-direction: alternate;
 }
 
-.cloud-1 { width: 90%; height: 26%; left: -15%; top: 18%; animation-name: drift-a; animation-duration: 90s; }
-.cloud-2 { width: 80%; height: 22%; left:  30%; top: 40%; animation-name: drift-b; animation-duration: 110s; opacity: 0.7; }
-.cloud-3 { width: 70%; height: 18%; left: -10%; top: 62%; animation-name: drift-c; animation-duration: 95s; opacity: 0.5; }
+.cloud-1 { width: 90%; height: 26%; left: -15%; top: 18%; animation-name: drift-a; animation-duration: calc(var(--phrase) * 12); }
+.cloud-2 { width: 80%; height: 22%; left:  30%; top: 40%; animation-name: drift-b; animation-duration: calc(var(--phrase) * 14); opacity: 0.7; }
+.cloud-3 { width: 70%; height: 18%; left: -10%; top: 62%; animation-name: drift-c; animation-duration: calc(var(--phrase) * 13); opacity: 0.5; }
 .cloud-4,
 .cloud-5 { display: none; }
 
@@ -3821,7 +3840,6 @@ body.lightbox-open { overflow: hidden; }
     border-radius: var(--radius-xl);
     overflow: hidden;
     margin-bottom: 2.5rem;
-    box-shadow: var(--shadow);
 }
 
 .single-event-image img {
@@ -4044,10 +4062,9 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
     color: var(--white);
     transform: rotate(var(--tilt));
     transform-origin: 50% 0;
-    animation: card-sway 8s ease-in-out infinite;
 }
-.weekly-day-card:nth-child(2) { --tilt: 1.1deg; background: var(--orange-900); animation-duration: 9s; animation-delay: -2s; }
-.weekly-day-card:nth-child(3) { --tilt: -0.7deg; background: var(--sage-700); animation-duration: 7.5s; animation-delay: -4s; }
+.weekly-day-card:nth-child(2) { --tilt: 1.1deg; background: var(--orange-900); }
+.weekly-day-card:nth-child(3) { --tilt: -0.7deg; background: var(--sage-700); }
 .weekly-day-card:hover { animation-play-state: paused; }
 .weekly-day-head {
     font-family: var(--font-serif);
@@ -4078,3 +4095,66 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
 @media (max-width: 900px) { .weekly-week { grid-template-columns: 1fr; gap: 2rem; } }
 @media (prefers-reduced-motion: reduce) { .weekly-day-card { animation: none; } }
 
+
+@media (prefers-reduced-motion: reduce) {
+    .program-panel, .event-full-row, .weekly-day-card,
+    .flower-orange, .flower-green, .hero-photo img, .hero-light > span { animation: none !important; }
+}
+
+/* ============================================================
+   PROGRAMME COLOUR CODE
+   One colour per path, used wherever a class is named:
+   Hula Basics = Bird Orange, Auana = Paradise Blue, Kahiko = Sage.
+   Classes open to everyone (Chair, Children's) and anything that is not
+   a class (events) stay neutral, so the three colours keep their meaning.
+   Mark any element with data-prog="<class slug>" to give it --prog.
+   ============================================================ */
+[data-prog]                  { --prog: var(--gray-300); }
+[data-prog="hula-basics"]    { --prog: var(--orange-900); }
+[data-prog="modern-auana"]   { --prog: var(--blue-700); }
+[data-prog="ancient-kahiko"] { --prog: var(--sage-700); }
+
+/* Home programme cards and classes bands take the colour as their field. */
+.program-panel[data-prog] { background: var(--prog); }
+
+/* Weekly schedule: the day cards are plain; each class carries its colour
+   as a bar down its left side. */
+.weekly-day-card,
+.weekly-day-card:nth-child(2),
+.weekly-day-card:nth-child(3) { background: var(--gray-100); color: var(--gray-900); }
+.weekly-day-head { color: var(--gray-900); }
+.weekly-day-list li + li { border-top-color: rgba(23, 23, 19, 0.15); }
+.weekly-slot[data-prog] { border-left: 4px solid var(--prog); padding-left: 1rem; }
+.weekly-day-list li + li .weekly-slot { margin-top: 0; }
+.weekly-slot:focus-visible { outline-color: var(--gray-900); }
+
+/* Register: class rows and class checkboxes. */
+.class-list-item { border-left: 4px solid transparent; padding-left: 1rem; }
+.class-list-item[data-prog] { border-left-color: var(--prog); }
+.class-list-item[data-prog="hula-basics"] .btn,
+.class-list-item[data-prog="modern-auana"] .btn,
+.class-list-item[data-prog="ancient-kahiko"] .btn { border-color: var(--prog); color: var(--prog); }
+.class-list-item[data-prog="hula-basics"] .btn:hover,
+.class-list-item[data-prog="modern-auana"] .btn:hover,
+.class-list-item[data-prog="ancient-kahiko"] .btn:hover { background: var(--prog); color: var(--white); }
+.register-agree[data-prog] input { accent-color: var(--prog); }
+.register-agree[data-prog] span::before {
+    content: ''; display: inline-block; width: 0.6em; height: 0.6em; border-radius: 50%;
+    background: var(--prog); margin-right: 0.5em; vertical-align: 0.05em;
+}
+
+/* Tuition: the class you're paying for. */
+.tuition-for[data-prog] strong { color: var(--prog); }
+
+/* Events are not a class: Lava Black cards on the Events page, a light
+   neutral band on the home page. */
+.event-full-row { background: var(--gray-900); }
+.home-events { background: var(--gray-100); color: var(--gray-900); }
+.home-events .section-heading,
+.home-events .event-date-box,
+.home-events .event-info h3,
+.home-events .event-info .meta,
+.home-events .event-arrow { color: var(--gray-900); }
+.home-events .event-row { border-bottom-color: rgba(23, 23, 19, 0.2); }
+.home-events .btn-outline-green { border-color: var(--gray-900); color: var(--gray-900); }
+.home-events .btn-outline-green:hover { background: var(--gray-900); color: var(--white); }
