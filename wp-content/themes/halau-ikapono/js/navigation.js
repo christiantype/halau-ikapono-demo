@@ -428,6 +428,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // ── Hanging punctuation ──────────────────────────────────────
+    // A block that opens with a quote mark gets that mark wrapped in .hang
+    // and pulled left by its own measured width, so the words align with
+    // the text above and below. Centred blocks are left alone.
+    const OPENERS = /^[“‘"'«„]/;
+    document.querySelectorAll('main p, main blockquote, main h1, main h2, main h3, main h4, main li, main dd, main figcaption').forEach(function (el) {
+        if (el.querySelector('.hang') || el.closest('.hang')) return;
+        if (getComputedStyle(el).textAlign === 'center') return;
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        let n = walker.nextNode();
+        while (n && !n.textContent.trim()) n = walker.nextNode();
+        if (!n) return;
+        const lead = n.textContent.match(/^\s*/)[0].length;
+        if (!OPENERS.test(n.textContent.slice(lead))) return;
+        // Only the first text in the block: a quote mark further in (after a <strong>, say) is not at the margin.
+        const range = document.createRange();
+        range.setStart(el, 0); range.setEnd(n, lead);
+        if (range.toString().trim()) return;
+        const rest = n.splitText(lead);
+        rest.splitText(1);
+        const span = document.createElement('span');
+        span.className = 'hang';
+        rest.parentNode.insertBefore(span, rest);
+        span.appendChild(rest);
+        span.style.marginLeft = (-span.getBoundingClientRect().width) + 'px';
+    });
+
     // ── Pronunciation (About: Lāʻau Lapaʻau terms) ────────────────
     let termAudio = null, termBtn = null;
     document.querySelectorAll('.bio-term-play').forEach(function (btn) {

@@ -174,6 +174,10 @@ input, button, textarea, select { font: inherit; }
 /* No widows: never leave one word alone on a paragraph's last line. */
 p, li, dd, figcaption, blockquote { text-wrap: pretty; }
 
+/* Hanging punctuation: an opening quote mark sits in the margin so the
+   text, not the mark, lines up (width measured in js/navigation.js). */
+.hang { display: inline-block; }
+
 /* No italic type anywhere on the site. */
 em, i, cite, address { font-style: normal; }
 h1, h2, h3, h4, h5, h6 {
@@ -1160,10 +1164,7 @@ a.event-row { color: inherit; text-decoration: none; }
 .quote-frame-text { margin: 0; }
 
 .quote-frame-text blockquote {
-    /* Opening quote mark hangs into the margin. Safari honours
-       hanging-punctuation; elsewhere a negative indent does the job. */
-    hanging-punctuation: first;
-    text-indent: -0.42em;
+    /* Opening quote mark hangs into the margin: js/navigation.js (.hang). */
     font-family: var(--font-serif);
     font-size: calc(clamp(1.5rem, 2.6vw, 2.5rem) * var(--type-scale));
     font-weight: 200;
@@ -1251,9 +1252,6 @@ a.event-row { color: inherit; text-decoration: none; }
     .quote-frame-photos img { transition: none; }
 }
 
-@supports (hanging-punctuation: first) {
-    .quote-frame-text blockquote { text-indent: 0; }
-}
 
 /* ============================================================
    HOME — CTA
@@ -1465,7 +1463,6 @@ a.event-row { color: inherit; text-decoration: none; }
 .about-band-quote figcaption { color: #fff; mix-blend-mode: normal; }
 
 .about-band-quote blockquote {
-    hanging-punctuation: first last;
     font-family: var(--font-serif);
     font-size: calc(clamp(1.75rem, 3.4vw, 3rem) * var(--type-scale));
     font-weight: 200;
@@ -1755,7 +1752,6 @@ a.event-row { color: inherit; text-decoration: none; }
 }
 
 .testimonial-slide blockquote {
-    hanging-punctuation: first last;
     font-family: var(--font-serif);
     text-transform: none;
     font-size: calc(clamp(1.75rem, 3.2vw, 2.9rem) * var(--type-scale));
@@ -1907,7 +1903,6 @@ a.event-row { color: inherit; text-decoration: none; }
     font-weight: 300;
     line-height: 1.6;
     margin: 0;
-    hanging-punctuation: first;
 }
 .bio-quote figcaption {
     font-family: var(--font-sans);
@@ -1957,13 +1952,36 @@ a.event-row { color: inherit; text-decoration: none; }
 
 /* Zen meditation and Lāʻau Lapaʻau bands */
 .bio-band { padding-block: 7rem; }
-.bio-band--zen  {
-    /* The ZLMC zendo, under a deep sage tint so the white text reads. */
-    background:
-        linear-gradient(rgba(46, 62, 40, 0.84), rgba(46, 62, 40, 0.84)),
-        url(assets/images/zlmc-zendo.webp) center 40% / cover no-repeat,
-        var(--sage-800);
+.bio-band--zen {
+    /* Ambient: ZLMC candlelight (softened) under a warm dark tint, drifting
+       very slowly. The image is a layer behind the content. */
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: #1d140c;
     color: var(--white);
+}
+.bio-band--zen::before {
+    content: "";
+    position: absolute;
+    inset: -4%;
+    z-index: -2;
+    background: url(assets/images/zlmc-candlelight.webp) center 45% / cover no-repeat;
+    animation: zen-drift 40s ease-in-out infinite alternate;
+}
+.bio-band--zen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, rgba(22, 15, 9, 0.72) 0%, rgba(22, 15, 9, 0.6) 45%, rgba(22, 15, 9, 0.7) 100%);
+}
+@keyframes zen-drift {
+    from { transform: scale(1) translate3d(0, 0, 0); }
+    to   { transform: scale(1.08) translate3d(-2%, -1.5%, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .bio-band--zen::before { animation: none; }
 }
 .bio-band--laau { background: var(--green-500); color: var(--gray-900); }
 .bio-band--zen .bio-kicker { color: var(--white); }
@@ -1991,10 +2009,9 @@ a.event-row { color: inherit; text-decoration: none; }
     list-style: none;
     margin: 4rem 0 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: var(--gutter);
+    row-gap: var(--gutter);
 }
+/* Five cards, two grid columns each, from column 1: every edge on a column line. */
 .bio-term {
     display: flex;
     flex-direction: column;
@@ -2036,15 +2053,15 @@ a.event-row { color: inherit; text-decoration: none; }
 .bio-term-play.is-playing { background: var(--green-900); color: var(--white); }
 
 @media (max-width: 1024px) {
-    .bio-terms { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .bio-terms > .bio-term { grid-column: auto / span 4; }
 }
 @media (max-width: 768px) {
     .bio-section, .bio-band { padding-block: 4rem; }
     .bio-band-title { margin-bottom: 1.5rem; }
-    .bio-terms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-12.bio-terms > .bio-term { grid-column: auto / span 6; }
 }
 @media (max-width: 40em) {
-    .bio-terms { grid-template-columns: 1fr; }
+    .grid-12.bio-terms > .bio-term { grid-column: auto / span 12; }
 }
 
 /* ============================================================
