@@ -466,7 +466,10 @@ document.addEventListener('DOMContentLoaded', function () {
             termAudio = new Audio(btn.dataset.audio);
             btn.classList.add('is-playing');
             termAudio.addEventListener('ended', function () { btn.classList.remove('is-playing'); if (termBtn === btn) termBtn = null; });
-            termAudio.play().catch(function () { btn.classList.remove('is-playing'); });
+            termAudio.play().then(function () {
+                const word = btn.closest('.bio-term') && btn.closest('.bio-term').querySelector('.bio-term-word');
+                if (window.halauPulse) window.halauPulse(termAudio, word);
+            }).catch(function () { btn.classList.remove('is-playing'); });
         });
     });
 
@@ -641,7 +644,7 @@ document.querySelectorAll('.scholarship-toggle').forEach((btn) => {
         const url = queue.shift();
         if (!url) { if (playing) playing.classList.remove('is-playing'); playing = null; return; }
         audio.src = url; audio.currentTime = 0;
-        audio.play().catch(() => {});
+        audio.play().then(() => { if (window.halauPulse && playing) window.halauPulse(audio, playing.closest('.haw')); }).catch(() => {});
     };
     const play = (btn) => {
         if (playing) playing.classList.remove('is-playing');
@@ -698,4 +701,183 @@ document.querySelectorAll('.scholarship-toggle').forEach((btn) => {
         while (b.firstChild) a.appendChild(b.firstChild);
         b.remove();
     });
+})();
+
+/* Big type that dances: split .dance elements (hero titles, pull quotes)
+   into letters, each with its own weight (--w), turn (--r), sway (--dw) and
+   beat (--i). Words are wrapped whole so lines never break mid-word. */
+(function () {
+    const W = [600, 330, 720, 420, 280, 660, 690, 300, 560, 760, 380, 640];
+    const R = [-2.5, 2, -1, 3, -2, 1.5, 2.5, -3, 1, -1.5, 3, -2];
+    // Every display line on the site dances; running text stays still so it
+    // can be read.
+    const sel = [
+        '.hero-title', '.about-hero-text h1', '.page-hero h1', '.gallery-title h1', '.pull blockquote',
+        '.section-heading', '.programming-heading', '.program-panel-title a', '.class-band-body h2 .serif',
+        '.class-band-body h3', '.about-story-title h2 .serif', '.bio-title', '.bio-band-title',
+        '.home-cta h2', '.footer-statement p', '.weekly-day-head'
+    ].join(', ');
+    document.querySelectorAll(sel).forEach((el) => {
+        el.classList.add('dance');
+        el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
+        let k = 0;
+        const walk = (node) => {
+            [...node.childNodes].forEach((n) => {
+                if (n.nodeType === 1) { walk(n); return; }
+                if (n.nodeType !== 3 || !n.nodeValue.trim()) return;
+                const frag = document.createDocumentFragment();
+                n.nodeValue.split(/(\s+)/).forEach((part) => {
+                    if (!part) return;
+                    if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
+                    const word = document.createElement('span');
+                    word.className = 'dw'; word.setAttribute('aria-hidden', 'true');
+                    for (const ch of part) {
+                        const l = document.createElement('span');
+                        l.className = 'dl'; l.textContent = ch;
+                        l.style.setProperty('--w', W[k % W.length] * 0.35 + 480 * 0.65);   // subtle: pulled toward 480
+                        l.style.setProperty('--r', (R[k % R.length] * 0.5) + 'deg');
+                        l.style.setProperty('--dw', (k % 2 ? -1 : 1) * 70);
+                        l.style.setProperty('--i', k % 8);
+                        l.style.setProperty('--k', k);
+                        word.appendChild(l); k++;
+                    }
+                    frag.appendChild(word);
+                });
+                n.replaceWith(frag);
+            });
+        };
+        walk(el);
+    });
+})();
+
+/* Sound you can see: while a recording plays, the word's letters rise and
+   fill in a ripple that follows the loudness of Kumu June's voice. */
+window.halauPulse = (function () {
+    let ctx = null;
+    return function (audio, el) {
+        if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        // Split the word's own text (not the button) into letters once.
+        if (!el.querySelector('.pulse-l')) {
+            const tn = [...el.childNodes].find((n) => n.nodeType === 3 && n.nodeValue.trim());
+            if (!tn) return;
+            const frag = document.createDocumentFragment();
+            for (const ch of tn.nodeValue) {
+                if (ch === ' ') { frag.appendChild(document.createTextNode(' ')); continue; }
+                const s = document.createElement('span'); s.className = 'pulse-l'; s.textContent = ch; frag.appendChild(s);
+            }
+            tn.replaceWith(frag);
+        }
+        const letters = [...el.querySelectorAll('.pulse-l')];
+        if (window.halauFixSlots) window.halauFixSlots(letters);
+        try {
+            ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+            if (ctx.state === 'suspended') ctx.resume();
+            if (!audio._src) { audio._src = ctx.createMediaElementSource(audio); audio._an = ctx.createAnalyser(); audio._an.fftSize = 512; audio._src.connect(audio._an); audio._an.connect(ctx.destination); }
+        } catch (e) { return; }
+        const an = audio._an, buf = new Uint8Array(an.fftSize);
+        let level = 0;
+        const frame = (t) => {
+            an.getByteTimeDomainData(buf);
+            let sum = 0; for (let i = 0; i < buf.length; i++) { const v = (buf[i] - 128) / 128; sum += v * v; }
+            level += (Math.min(1, Math.sqrt(sum / buf.length) * 4) - level) * 0.35;
+            letters.forEach((l, i) => {
+                const wave = 0.5 + 0.5 * Math.sin(t / 90 - i * 0.9);
+                if (!l.dataset.w) l.dataset.w = parseFloat(getComputedStyle(l).fontWeight) || 400;
+                l.style.fontWeight = Math.min(800, +l.dataset.w + level * wave * 320).toFixed(0);
+            });
+            if (!audio.paused && !audio.ended) requestAnimationFrame(frame);
+            else letters.forEach((l) => { if (l.dataset.w) l.style.fontWeight = l.dataset.w; });
+        };
+        requestAnimationFrame(frame);
+    };
+})();
+
+/* Words index: letters at the logo's weights and turns, and tap to play. */
+(function () {
+    const btns = document.querySelectorAll('.words-btn');
+    if (!btns.length) return;
+    const W = [600, 330, 720, 420, 280, 660, 690, 300, 560, 760, 380, 640];
+    const R = [-2.5, 2, -1, 3, -2, 1.5, 2.5, -3, 1, -1.5, 3, -2];
+    let k = 0;
+    document.querySelectorAll('.haw-big').forEach((el) => {
+        const text = el.textContent; el.textContent = '';
+        for (const ch of text) {
+            if (ch === ' ') { el.appendChild(document.createTextNode(' ')); continue; }
+            const s = document.createElement('span');
+            s.className = 'pulse-l'; s.textContent = ch;
+            s.style.fontWeight = W[k % W.length]; s.style.rotate = R[k % R.length] * 0.6 + 'deg'; k++;
+            el.appendChild(s);
+        }
+    });
+    const audio = new Audio(); let on = null;
+    btns.forEach((b) => b.addEventListener('click', () => {
+        if (on) on.classList.remove('is-playing');
+        audio.src = b.dataset.audio; audio.currentTime = 0;
+        on = b; b.classList.add('is-playing');
+        audio.play().then(() => { if (window.halauPulse) window.halauPulse(audio, b.querySelector('.words-word')); }).catch(() => {});
+    }));
+    audio.addEventListener('ended', () => { if (on) on.classList.remove('is-playing'); on = null; });
+})();
+
+/* The type answers your movement: scrolling adds to the sway (a dancer
+   picking up the beat), then it settles. --move runs 0..1 on the root and
+   scales every letter's swing. */
+(function () {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const root = document.documentElement;
+    let last = scrollY, move = 0, raf = 0;
+    const tick = () => {
+        move *= 0.92;
+        root.style.setProperty('--move', move.toFixed(3));
+        raf = move > 0.01 ? requestAnimationFrame(tick) : 0;
+    };
+    addEventListener('scroll', () => {
+        const d = Math.abs(scrollY - last); last = scrollY;
+        move = Math.min(1, move + d / 400);
+        if (!raf) raf = requestAnimationFrame(tick);
+    }, { passive: true });
+})();
+
+/* Letters breathe. Each letter's stroke slowly swells and thins on its own
+   long, random breath (9-18 s), some deep, some barely. Every letter sits
+   in a slot fixed at its resting width, so a heavier stroke spills softly
+   into the space around it and never pushes its neighbours or re-wraps a
+   line. No rotation in motion; the small resting turn stays still. */
+window.halauFixSlots = function (els) {
+    els.forEach((el) => {
+        if (el.dataset.slot) return;
+        el.style.width = el.getBoundingClientRect().width + 'px';
+        el.style.textAlign = 'center';
+        el.dataset.slot = '1';
+    });
+};
+(function () {
+    const letters = [...document.querySelectorAll('.dance .dl')];
+    if (!letters.length) return;
+    letters.forEach((el) => { el.style.animation = 'none'; el.style.fontWeight = parseFloat(el.style.getPropertyValue('--w')) || 480; });
+    const fit = () => { letters.forEach((el) => { delete el.dataset.slot; el.style.width = ''; }); halauFixSlots(letters); };
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(fit);
+    let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(fit, 150); });
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    const L = letters.map((el) => ({
+        el,
+        base: parseFloat(el.style.getPropertyValue('--w')) || 480,
+        b: [rnd(9, 18), rnd(0, 6.3), Math.random() < 0.4 ? rnd(140, 210) : rnd(40, 90)],
+    }));
+    const visible = new Set();
+    const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
+    document.querySelectorAll('.dance').forEach((d) => io.observe(d));
+    const frame = (ms) => {
+        const t = ms / 1000;
+        const move = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--move')) || 0;
+        L.forEach((l) => {
+            if (!visible.has(l.el.closest('.dance'))) return;
+            const s = Math.sin((t / l.b[0]) * 6.283 + l.b[1]);
+            const w = l.base + l.b[2] * (s * Math.abs(s)) * (1 + move * 0.6);
+            l.el.style.fontWeight = Math.max(200, Math.min(800, w)).toFixed(0);
+        });
+        requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
 })();

@@ -113,7 +113,7 @@ Text Domain: halau-ikapono
 
     --font-serif: 'Ojuju', Georgia, serif;
     --font-sans:  'Alegreya Sans', 'Helvetica Neue', Arial, sans-serif;
-    --font-logo:  'Ojuju', Georgia, serif; /* the logo itself is an SVG outlined from Epicene */
+    --font-logo:  'Ojuju', Georgia, serif; /* the logo itself is an SVG outlined from Ojuju */
 
     --text-xs:   calc(0.75rem * var(--type-scale));
     --text-sm:   calc(0.875rem * var(--type-scale));
@@ -442,7 +442,7 @@ button { cursor: pointer; border: none; background: none; }
     letter-spacing: -0.07em;
     display: block;
 }
-.site-logo .logo-main svg { display: block; height: 1.6em; width: auto; }
+.site-logo .logo-main svg { display: block; height: 1.6em; width: auto; overflow: visible; }
 
 .site-logo:hover { opacity: 0.85; }
 
@@ -496,9 +496,6 @@ button { cursor: pointer; border: none; background: none; }
     min-height: calc(100svh - 48px);
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    border: 1px solid var(--menu-fg);
-    outline: 1px solid var(--menu-fg);
-    outline-offset: 5px;
     color: var(--menu-fg);
 }
 
@@ -518,7 +515,7 @@ button { cursor: pointer; border: none; background: none; }
 }
 
 .menu-wordmark { display: block; color: var(--menu-fg); }
-.menu-wordmark svg { display: block; height: calc(2rem * var(--type-scale) * 0.75); width: auto; }
+.menu-wordmark svg { overflow: visible; display: block; height: calc(2rem * var(--type-scale) * 0.75); width: auto; }
 
 .menu-list {
     list-style: none;
@@ -545,15 +542,6 @@ button { cursor: pointer; border: none; background: none; }
     color: var(--menu-fg);
     text-decoration: none;
     transition: background var(--ease-fast), color var(--ease-fast);
-}
-
-.menu-list .menu-num {
-    font-family: var(--font-sans);
-    font-style: normal;
-    font-size: var(--text-sm);
-    letter-spacing: 0.18em;
-    min-width: 2.25rem;
-    opacity: 0.8;
 }
 
 .menu-list a:hover,
@@ -628,7 +616,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 
 @media (max-width: 768px) {
     .menu-panel { padding: 12px; }
-    .menu-frame { min-height: calc(100svh - 24px); outline-offset: 3px; }
+    .menu-frame { min-height: calc(100svh - 24px); }
     .menu-main { padding: 5rem 1.5rem 1.5rem; }
     .menu-list { margin-inline: -1.5rem; }
     .menu-list a { padding-inline: 1.5rem; font-size: calc(clamp(1.75rem, 8vw, 2.5rem) * var(--type-scale)); }
@@ -797,8 +785,9 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .hero-title {
     font-family: var(--font-serif);
     font-weight: 480;
-    font-size: calc(clamp(2rem, 3.6vw, 52px) * var(--type-scale));
-    line-height: 1.02;
+    /* Bound by height too, so the five lines always fit the hero. */
+    font-size: clamp(2.5rem, min(7.6vw, 10vh), 8.5rem);
+    line-height: 0.92;
     letter-spacing: 0.02em;
     text-transform: uppercase;
     color: #fff;
@@ -1054,6 +1043,12 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 
 .program-panel-title a { color: inherit; text-decoration: none; }
 .program-panel-title a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+/* The whole card is the link: the title's link stretches over the card. */
+.program-panel { cursor: pointer; }
+.program-panel-title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.program-panel:hover .program-panel-title a { text-decoration: underline; text-underline-offset: 0.2em; }
+.program-panel:has(.program-panel-title a:focus-visible) { outline: 2px solid var(--white); outline-offset: -6px; }
+.program-panel-title a:focus-visible { outline: none; }
 
 .program-panel-text {
     font-family: var(--font-sans);
@@ -1440,12 +1435,11 @@ a.event-row { color: inherit; text-decoration: none; }
 }
 
 .about-hero-text h1 {
-    font-size: calc(clamp(2rem, 3.6vw, 3.25rem) * var(--type-scale));
+    font-size: clamp(5rem, 22vw, 20rem);
     font-weight: 480;
-    line-height: 1.1;
+    line-height: 0.85;
     letter-spacing: -0.01em;
     color: #fff;
-    text-shadow: 0 1px 12px rgba(0,0,0,0.45);
     margin-bottom: 0.5rem;
 }
 
@@ -1454,7 +1448,6 @@ a.event-row { color: inherit; text-decoration: none; }
     font-size: var(--text-lg);
     font-weight: 300;
     color: rgba(255,255,255,0.9);
-    text-shadow: 0 1px 12px rgba(0,0,0,0.45);
     margin: 0;
 }
 
@@ -1524,7 +1517,6 @@ a.event-row { color: inherit; text-decoration: none; }
     line-height: 1.3;
     letter-spacing: -0.01em;
     margin: 0 0 1.5rem;
-    text-shadow: 0 1px 14px rgba(0,0,0,0.4);
 }
 
 .about-band-quote figcaption {
@@ -1622,12 +1614,11 @@ a.event-row { color: inherit; text-decoration: none; }
 }
 
 .about-hero-text h1 {
-    font-size: calc(clamp(2rem, 3.6vw, 3.25rem) * var(--type-scale));
+    font-size: clamp(5rem, 22vw, 20rem);
     font-weight: 480;
-    line-height: 1.1;
+    line-height: 0.85;
     letter-spacing: -0.01em;
     color: #fff;
-    text-shadow: 0 1px 12px rgba(0,0,0,0.45);
     margin-bottom: 0.5rem;
 }
 
@@ -1636,7 +1627,6 @@ a.event-row { color: inherit; text-decoration: none; }
     font-size: var(--text-lg);
     font-weight: 300;
     color: rgba(255,255,255,0.9);
-    text-shadow: 0 1px 12px rgba(0,0,0,0.45);
     margin: 0;
 }
 
@@ -1687,7 +1677,6 @@ a.event-row { color: inherit; text-decoration: none; }
     line-height: 1.3;
     letter-spacing: -0.01em;
     margin: 0 0 1.5rem;
-    text-shadow: 0 1px 14px rgba(0,0,0,0.4);
 }
 
 .about-band-quote figcaption {
@@ -1715,16 +1704,26 @@ a.event-row { color: inherit; text-decoration: none; }
 
 .kumu-inner { align-items: center; }
 
+/* Founder photo: an asymmetric five-petal bloom (assets/frame-bloom.svg,
+   drawn in the photo's own 3:4 box so it never stretches). A blue bloom,
+   and the photo set inside it in the same bloom, a little smaller. */
 .kumu-photo {
     aspect-ratio: 3/4;
-    overflow: hidden;
-    background: var(--gray-150);
+    position: relative;
+    background: var(--blue-700);
+    -webkit-mask: url(assets/frame-bloom.svg) center / 100% 100% no-repeat;
+            mask: url(assets/frame-bloom.svg) center / 100% 100% no-repeat;
 }
-
 .kumu-photo img {
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    inset: 7%;
+    width: 86%;
+    height: 86%;
     object-fit: cover;
+    object-position: 50% 30%;
+    -webkit-mask: url(assets/frame-bloom.svg) center / 100% 100% no-repeat;
+            mask: url(assets/frame-bloom.svg) center / 100% 100% no-repeat;
+    transform: rotate(-4deg);
 }
 
 .kumu-info h3 {
@@ -2838,7 +2837,6 @@ body.lightbox-open { overflow: hidden; }
 .photo-gallery[data-view="slideshow"] .gallery-title h1,
 .photo-gallery[data-view="slideshow"] .gallery-title p {
     color: #fff;
-    text-shadow: 0 1px 12px rgba(0,0,0,0.45);
 }
 
 .photo-gallery[data-view="slideshow"] .gallery-title p { max-width: none; white-space: nowrap; }
@@ -2935,7 +2933,6 @@ body.lightbox-open { overflow: hidden; }
     font-size: var(--text-sm);
     letter-spacing: 0.08em;
     color: #fff;
-    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
     min-width: 4.5rem;
     text-align: center;
 }
@@ -4227,8 +4224,25 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
 /* Kumu June's archival portrait under her name in the bio. */
 /* Full width of the label column (cols 1-4), square, so the row never
    gets taller than the cards beside it; cropped to keep her whole face. */
-.bio-portrait { margin: 2.5rem 0 0; width: calc(100% * 5 / 4 + var(--gutter) / 4); aspect-ratio: 1 / 1; overflow: hidden; }
-.bio-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; }
+/* Highlights portrait: a leaf. Frame and photo both round two opposite
+   corners (top-left and bottom-right), the orange frame offset from the
+   photo so the shape reads twice. Square overall, cols 1-5. */
+.bio-portrait {
+    --frame-r: clamp(80px, 11vw, 180px);
+    --frame-pad: clamp(1rem, 2vw, 2rem);
+    margin: 2.5rem 0 0;
+    width: calc(100% * 5 / 4 + var(--gutter) / 4);
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+    padding: var(--frame-pad);
+    background: var(--orange-900);
+    border-radius: var(--frame-r) 0 var(--frame-r) 0;
+}
+.bio-portrait img {
+    display: block; width: 100%; height: 100%;
+    object-fit: cover; object-position: 50% 22%;
+    border-radius: calc(var(--frame-r) - var(--frame-pad)) 0 calc(var(--frame-r) - var(--frame-pad)) 0;
+}
 @media (max-width: 768px) { .bio-portrait { margin-top: 2rem; } }
 
 /* ʻŪniki: two archival photos side by side at one shared height (each
@@ -4266,3 +4280,106 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
     opacity: 0.32;
 }
 @media (max-width: 768px) { .bio-portrait { width: 100%; } }
+
+/* ============================================================
+   BIG TYPE THAT DANCES
+   Hero titles and pull quotes are set huge in Ojuju and split into letters
+   (js/navigation.js, .dance). Every letter has its own weight and a small
+   turn, like the logo, and sways gently on the site's eight-beat phrase,
+   each letter a beat after the last. Words stay whole when lines wrap.
+   ============================================================ */
+.page-hero h1,
+.photo-gallery .gallery-title h1,
+.photo-gallery[data-view="grid"] .gallery-title h1 {
+    font-size: clamp(2.25rem, 11vw, 11rem);
+    line-height: 0.88;
+    letter-spacing: 0;
+    overflow-wrap: normal;
+}
+.page-hero .grid-12 > [class*="col-"] { flex-direction: column; align-items: flex-start; }
+.page-hero p { text-align: left; margin-top: 1.25rem; }
+.page-hero .col-8 { grid-column: 1 / -1; }
+
+.dance .dw { display: inline-block; white-space: nowrap; }
+.dance .dl {
+    display: inline-block;
+    font-weight: var(--w, 480);
+    transform: rotate(var(--r, 0deg));
+    transform-origin: 50% 60%;
+}
+/* --move (0..1, from scrolling) widens the swing: more weight, more turn. */
+@keyframes letter-sway {
+    0%, 100% { font-weight: var(--w, 480); transform: rotate(var(--r, 0deg)); }
+    50%      { font-weight: calc(var(--w, 480) + var(--dw, 60) * (1 + var(--move, 0) * 2.5)); transform: rotate(calc(var(--r, 0deg) * (-0.6 - var(--move, 0) * 2))); }
+}
+@media (prefers-reduced-motion: reduce) { .dance .dl { animation: none; } }
+
+/* Sound you can see: while Kumu June's recording plays, the letters of the
+   word rise and fill with her voice (js/navigation.js sets each letter). */
+.pulse-l { display: inline-block; transition: font-weight 80ms linear; }
+
+/* Pull quote: one per page, at display size, breaking out of the grid on
+   purpose (it runs past the right margin and is clipped by the window). */
+.pull {
+    overflow: visible;
+    padding-block: calc(var(--header-h) + 2rem) 7rem;
+    background: var(--white);
+}
+.pull blockquote {
+    margin: 0;
+    /* Breaks the grid by running into the right margin all the way to the
+       window edge, but always wraps inside the window: nothing is cut. */
+    width: auto;
+    margin-right: 0;
+    padding-right: clamp(0.5rem, 2vw, 1.5rem);
+    margin-left: max(var(--margin), calc((100vw - var(--container)) / 2 + var(--margin)));
+    font-family: var(--font-serif);
+    font-weight: 480;
+    font-size: clamp(2rem, min(5vw, 7.5vh), 5.25rem);
+    line-height: 0.98;
+    max-width: 22ch;
+    text-transform: uppercase;
+    color: var(--gray-900);
+}
+.pull figcaption {
+    margin: 2rem 0 0 max(var(--margin), calc((100vw - var(--container)) / 2 + var(--margin)));
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+.pull--orange { background: var(--orange-900); }
+.pull--orange blockquote, .pull--orange figcaption { color: var(--white); }
+.pull--sage { background: var(--sage-700); }
+.pull--sage blockquote, .pull--sage figcaption { color: var(--white); }
+@media (max-width: 768px) { .pull { padding-block: 4rem; } }
+.classes-section--after { padding-top: 0; }
+.events-section--after { padding-top: 4rem; }
+
+/* Words index: scattered on the grid, each word its own size; the letters
+   carry the logo's weights and turns (js/navigation.js), and move with
+   Kumu June's voice when tapped. */
+.words-section { padding-block: 3rem 8rem; }
+.words-grid { list-style: none; margin: 0; padding: 0; row-gap: 3.5rem; align-items: end; }
+.words-item { grid-column: var(--start) / span var(--span); }
+.words-item:nth-child(even) { margin-top: 2.5rem; }
+.words-btn { all: unset; cursor: pointer; display: flex; flex-direction: column; gap: 0.6rem; }
+.words-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 6px; }
+.words-word {
+    font-family: var(--font-serif);
+    font-size: calc(clamp(2rem, 4.4vw, 4.75rem) * var(--size, 1));
+    line-height: 1;
+    color: var(--gray-900);
+}
+.words-mean { font-family: var(--font-sans); font-size: var(--text-sm); letter-spacing: 0.04em; color: var(--gray-900); }
+.words-btn.is-playing .words-mean { text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+@media (max-width: 768px) {
+    .words-grid { row-gap: 2rem; }
+    .words-item { grid-column: 1 / -1; }
+    .words-item:nth-child(even) { margin-top: 0; margin-left: 25%; }
+}
+
+/* Small screens: long button labels wrap instead of pushing the page wide,
+   and the corners of tilted cards never make the page scroll sideways. */
+@media (max-width: 480px) { .btn { white-space: normal; text-align: center; max-width: 100%; } }
+body { overflow-x: clip; }
