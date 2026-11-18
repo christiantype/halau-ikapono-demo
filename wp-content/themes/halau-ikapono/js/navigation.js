@@ -881,3 +881,70 @@ window.halauFixSlots = function (els) {
     };
     requestAnimationFrame(frame);
 })();
+
+
+/* Home quote: the five senses take turns after "we", one at a time, each
+   pulsing in weight on its own irregular beat. The slot is measured at the
+   heaviest weight so nothing around it ever moves. */
+(function () {
+    const cycle = document.querySelector('.quote-frame-text .q-cycle');
+    if (!cycle) return;
+    const words = [...cycle.querySelectorAll('.q-sans')];
+    const tail = cycle.closest('.q-tail');
+    if (tail) tail.setAttribute('aria-hidden', 'true');
+    const measure = () => {
+        let w = 0;
+        words.forEach((el) => { const o = el.style.fontWeight; el.style.fontWeight = 720; w = Math.max(w, el.getBoundingClientRect().width); el.style.fontWeight = o; });
+        cycle.style.setProperty('--q-slot', Math.ceil(w + 2) + 'px');
+    };
+    measure();
+    if (document.fonts) document.fonts.ready.then(measure);
+    window.addEventListener('resize', measure);
+
+    // Split each word (and its closing mark) into letters.
+    words.forEach((w) => {
+        const wrap = (node) => [...node.childNodes].forEach((n) => {
+            if (n.nodeType === 1) { wrap(n); return; }
+            const f = document.createDocumentFragment();
+            [...n.nodeValue].forEach((ch) => { const l = document.createElement('span'); l.className = 'ql'; l.textContent = ch; f.appendChild(l); });
+            n.replaceWith(f);
+        });
+        wrap(w);
+    });
+    cycle.classList.add('is-split');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Uneven delays: letters leave and arrive out of order, never in a
+    // tidy left-to-right sweep, and the pause between words varies.
+    const scatter = (w, spread) => w.querySelectorAll('.ql').forEach((l) => {
+        l.style.setProperty('--d', (Math.random() * spread).toFixed(2) + 's');
+    });
+    let i = 0;
+    const next = () => {
+        scatter(words[i], 0.7);
+        words[i].classList.remove('is-on');
+        i = (i + 1) % words.length;
+        scatter(words[i], 0.9);
+        setTimeout(() => words[i].classList.add('is-on'), 350 + Math.random() * 450);
+        setTimeout(next, 3000 + Math.random() * 2200);
+    };
+    setTimeout(next, 3000 + Math.random() * 1500);
+
+    const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+    const beats = words.map((_, k) => ({ p: 1.5 + Math.random() * 0.9, o: Math.random() * 10, k }));
+    let visible = true;
+    new IntersectionObserver((es) => { visible = es[0].isIntersecting; }).observe(cycle);
+    const frame = (now) => {
+        if (visible) {
+            const t = now / 1000;
+            words.forEach((el, k) => {
+                const b = beats[k], u = (t + b.o) / b.p, n = Math.floor(u), x = u - n;
+                const amp = 0.3 + 0.7 * hash(n * 31 + k * 7);
+                const g = (c, w) => Math.exp(-((x - c) / w) * ((x - c) / w));
+                const beat = amp * (g(0.12, 0.11) + 0.55 * g(0.38, 0.13));
+                el.style.fontWeight = Math.min(720, 340 + 380 * beat).toFixed(0);
+            });
+        }
+        requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+})();
