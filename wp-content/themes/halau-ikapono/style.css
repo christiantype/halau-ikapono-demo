@@ -3167,7 +3167,7 @@ body.lightbox-open { overflow: hidden; }
 /* Grid */
 .gallery-full-grid { margin-bottom: 2rem; }
 
-.gallery-full-grid { align-items: start; row-gap: 6rem; }
+.gallery-full-grid { align-items: start; row-gap: 2rem; }
 
 .gallery-cell {
     grid-column: var(--start) / span var(--span);
@@ -3176,7 +3176,7 @@ body.lightbox-open { overflow: hidden; }
     background: none;
     cursor: zoom-in;
 }
-.gallery-cell:nth-child(even) { margin-top: 4rem; }
+.gallery-cell:nth-child(even) { margin-top: 2rem; }
 
 .gallery-cell:focus-visible { outline: 2px solid var(--blue-700); outline-offset: 3px; }
 
@@ -3189,10 +3189,31 @@ body.lightbox-open { overflow: hidden; }
 
 .gallery-cell:hover img { opacity: 0.9; }
 
+/* Every photo in its own frame: a solid palette colour, its own thickness
+   and corners, and a slight tilt, in the language of the leaf and arch
+   frames on the About page. Seven variants, so neighbours never match. */
+.gallery-cell {
+    padding: var(--fp, 10px);
+    background: var(--fc, var(--orange-900));
+    border-radius: var(--fr, 0);
+    transform: rotate(var(--ft, 0deg));
+    transition: transform 0.4s ease;
+}
+.gallery-cell img { border-radius: var(--ir, 0); }
+.gallery-cell:nth-child(7n+1) { --fc: var(--orange-900); --fp: 10px; --fr: 120px 0 120px 0; --ft: -1deg;  --ir: 110px 0 110px 0; }
+.gallery-cell:nth-child(7n+2) { --fc: var(--sage-700); --fp: 16px; --fr: 0 90px 0 0; --ft: 0.8deg;  --ir: 0 74px 0 0; }
+.gallery-cell:nth-child(7n+3) { --fc: var(--blue-700); --fp: 8px; --fr: 50% 50% 0 0 / 30% 30% 0 0; --ft: -0.6deg;  --ir: 50% 50% 0 0 / 30% 30% 0 0; }
+.gallery-cell:nth-child(7n+4) { --fc: var(--orange-800); --fp: 14px; --fr: 0 0 100px 0; --ft: 1.2deg;  --ir: 0 0 86px 0; }
+.gallery-cell:nth-child(7n+5) { --fc: var(--sage-800); --fp: 10px; --fr: 60px; --ft: -1.4deg;  --ir: 50px; }
+.gallery-cell:nth-child(7n+6) { --fc: var(--blue-900); --fp: 18px; --fr: 0 140px 0 140px; --ft: 0.5deg;  --ir: 0 122px 0 122px; }
+.gallery-cell:nth-child(7n+7) { --fc: var(--orange-950); --fp: 12px; --fr: 90px 90px 0 0; --ft: -0.8deg;  --ir: 78px 78px 0 0; }
+.gallery-cell:hover { transform: rotate(0deg); }
+@media (prefers-reduced-motion: reduce) { .gallery-cell { transition: none; } }
+
 @media (max-width: 768px) {
     .gallery-full-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 2rem; }
     .gallery-cell { grid-column: auto / span 1; }
-    .gallery-cell:nth-child(even) { margin-top: 2rem; }
+    .gallery-cell:nth-child(even) { margin-top: 1rem; }
 }
 
 .gallery-section { padding-block: 4rem 6rem; }
@@ -4539,6 +4560,28 @@ a.weekly-row:focus-visible { outline: 2px solid var(--blue-700); outline-offset:
 .pull--sage blockquote, .pull--sage figcaption { color: var(--white); }
 @media (max-width: 768px) { .pull { padding-block: 4rem; } }
 .classes-section--after { padding-top: 0; }
+
+/* Hula is for everyone: centred over a darkened photograph of kahiko on
+   stage. */
+.everyone { position: relative; isolation: isolate; overflow: hidden; background: var(--gray-900); color: var(--white); }
+.everyone-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; object-position: 50% 40%; filter: brightness(0.5); }
+.everyone::before {
+    content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(ellipse 55% 60% at 50% 48%, rgba(23,23,19,0.62), rgba(23,23,19,0.15) 100%);
+}
+.everyone .pull { background: transparent; }
+.everyone .pull { padding-bottom: 3rem; }
+.everyone .pull blockquote { color: var(--white); text-align: center; margin-inline: auto; padding-inline: var(--margin); box-sizing: border-box; }
+@media (max-width: 768px) {
+    .everyone .pull { padding-top: calc(96px + 3rem); padding-bottom: 2rem; }
+    .everyone .pull blockquote { font-size: clamp(2rem, 11vw, 3rem); }
+}
+.everyone .classes-section--after { background: transparent; padding-bottom: 7rem; }
+.everyone .classes-enroll p,
+.everyone .classes-enroll a { color: var(--white); }
+.everyone .classes-enroll a { text-decoration-color: currentColor; }
+.everyone .classes-enroll > div { text-align: center; }
+.everyone .classes-enroll { padding-top: 0; }
 .events-section--after { padding-top: 4rem; }
 
 /* Words index: scattered on the grid, each word its own size; the letters
