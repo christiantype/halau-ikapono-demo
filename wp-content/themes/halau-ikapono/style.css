@@ -1499,6 +1499,19 @@ a.event-row { color: inherit; text-decoration: none; }
     position: relative;
     overflow: hidden;
 }
+/* A dancer in the garden behind the invitation, darkened under the words. */
+.home-cta { isolation: isolate; min-height: min(56.25vw, 92svh); display: flex; flex-direction: column; justify-content: flex-end; padding-block: 0 5rem; }
+
+.home-cta-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; z-index: -2; }
+.home-cta::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(23,23,19,0.78) 0%, rgba(23,23,19,0.45) 38%, rgba(23,23,19,0) 65%); pointer-events: none; }
+.home-cta .container { position: relative; }
+/* On a phone the photograph sits above the invitation instead of under it,
+   so his face is never behind the words. */
+@media (max-width: 768px) {
+    .home-cta { min-height: 0; padding-top: 0 !important; padding-bottom: 3.5rem; }
+    .home-cta-photo { position: relative; inset: auto; z-index: 0; height: auto; aspect-ratio: 4 / 5; object-position: 52% 30%; margin-bottom: 2.5rem; }
+    .home-cta::before { display: none; }
+}
 
 .home-cta .panel-title { color: var(--white); margin-bottom: 1.5rem; }
 .home-cta p { color: var(--white) !important; }
@@ -4690,3 +4703,9 @@ body { overflow-x: clip; }
 .single-event-image, .test-checkout, .form-success-msg, .event-full-row,
 .btn, .gallery-nav, .gallery-back, .say-pill { border-radius: var(--radius-card); }
 .weekly-day-card, .bio-card { overflow: hidden; }
+
+/* Events: the closing line over the hālau on stage, darkened beneath it. */
+.pull--photo { position: relative; isolation: isolate; overflow: hidden; min-height: min(66vw, 92svh); display: flex; align-items: flex-end; padding-bottom: 5rem; }
+.pull--photo .pull-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; z-index: -2; }
+.pull--photo::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(23,23,19,0.8) 0%, rgba(23,23,19,0.4) 40%, rgba(23,23,19,0) 70%); }
+@media (max-width: 768px) { .pull--photo { min-height: 120vw; padding-bottom: 3rem; } }
