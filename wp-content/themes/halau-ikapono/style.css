@@ -645,7 +645,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
 .hamburger:hover { background: var(--gray-100); }
 .site-header .hamburger span,
 .site-header--over-dark .hamburger span,
-.site-header--over-dark.is-scrolled .hamburger span { background: var(--gray-900); }
+.site-header--over-dark.is-scrolled .hamburger span { background: var(--bar, var(--gray-900)); transition: transform var(--ease), opacity var(--ease), background-color .5s ease; }
 .site-header--over-dark .hamburger:hover { background: var(--gray-100); }
 
 /* Over a dark hero the bars go white, then back to dark once the
@@ -671,22 +671,39 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     transform-origin: center;
 }
 
+/* No disc: three large bars on their own. Their colour follows the section
+   behind them (js/navigation.js sets --bar): ink on light, white on dark
+   and on photographs. */
+.site-header .hamburger,
+.site-header .hamburger:hover,
+.site-header .hamburger.is-active,
+.site-header .hamburger.is-active:hover,
+.site-header--over-dark .hamburger:hover,
+.site-header--over-dark .hamburger.is-active:hover,
+.site-header--over-dark.is-scrolled .hamburger:hover {
+    background: transparent;
+    border-color: transparent;
+    width: 48px;
+    height: 48px;
+    padding: 9px 6px;
+    gap: 7px;
+}
 /* The bars are drawn by hand: each at its own angle, length and weight,
    and each sways slowly on its own. Open, they straighten into the X. */
 .hamburger:not(.is-active) span { border-radius: 0; animation: bar-sway 4.6s ease-in-out infinite alternate; }
-.hamburger:not(.is-active) span:nth-child(1) { height: 3px; width: 100%; --r0: -8deg; --r1: -2deg; }
-.hamburger:not(.is-active) span:nth-child(2) { height: 2.5px; width: 86%; margin-left: 10%; --r0: 5deg; --r1: 10deg; --dx: -1.5px; animation-duration: 3.7s; animation-delay: -2s; }
-.hamburger:not(.is-active) span:nth-child(3) { height: 3.5px; width: 88%; margin-left: 4%; --r0: -2deg; --r1: -8deg; --dx: 1.5px; animation-duration: 5.3s; animation-delay: -4s; }
+.hamburger:not(.is-active) span:nth-child(1) { height: 4.5px; width: 100%; --r0: -8deg; --r1: -2deg; }
+.hamburger:not(.is-active) span:nth-child(2) { height: 3.5px; width: 84%; margin-left: 12%; --r0: 5deg; --r1: 10deg; --dx: -2px; animation-duration: 3.7s; animation-delay: -2s; }
+.hamburger:not(.is-active) span:nth-child(3) { height: 5.5px; width: 90%; margin-left: 3%; --r0: -2deg; --r1: -8deg; --dx: 2px; animation-duration: 5.3s; animation-delay: -4s; }
 @keyframes bar-sway {
     0%   { transform: translateX(0) rotate(var(--r0)) scaleX(1); }
     50%  { transform: translateX(var(--dx, 1px)) rotate(var(--r1)) scaleX(0.9); }
     100% { transform: translateX(calc(var(--dx, 1px) * -1)) rotate(var(--r0)) scaleX(1.04); }
 }
 @media (prefers-reduced-motion: reduce) { .hamburger:not(.is-active) span { animation: none; transform: rotate(var(--r0)); } }
-.hamburger.is-active span { height: 2px; }
-.hamburger.is-active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.is-active span { height: 4px; }
+.hamburger.is-active span:nth-child(1) { transform: translateY(11px) rotate(45deg); }
 .hamburger.is-active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.hamburger.is-active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.hamburger.is-active span:nth-child(3) { transform: translateY(-11px) rotate(-45deg); }
 
 /* ============================================================
    HERO — HOMEPAGE

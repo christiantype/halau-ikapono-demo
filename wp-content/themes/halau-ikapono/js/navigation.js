@@ -948,3 +948,49 @@ window.halauFixSlots = function (els) {
     };
     requestAnimationFrame(frame);
 })();
+
+
+/* The menu bars take their colour from the section behind them: ink over a
+   light ground, white over a dark one or a photograph. Open, the X sits on
+   the light menu panel and stays ink. */
+(function () {
+    const btn = document.querySelector('.site-header .hamburger');
+    if (!btn) return;
+    const header = btn.closest('.site-header');
+    const lum = (c) => {
+        const m = c.match(/[\d.]+/g); if (!m) return null;
+        const [r, g, b, a = 1] = m.map(Number); if (a < 0.5) return null;
+        const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+        return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+    };
+    const groundAt = (x, y) => {
+        const stack = document.elementsFromPoint(x, y).filter((el) => !header.contains(el));
+        for (const el of stack) {
+            if (/^(IMG|VIDEO|CANVAS|PICTURE)$/.test(el.tagName)) return 0;      // photographs read as dark
+            for (let n = el; n && n !== document.documentElement; n = n.parentElement) {
+                const cs = getComputedStyle(n);
+                if (/url\(/.test(cs.backgroundImage)) return 0;               // a photograph set as a background
+                const stops = cs.backgroundImage.match(/rgba?\([^)]+\)/g);     // a gradient: the mean of its stops
+                if (stops) { const ls = stops.map(lum).filter((v) => v !== null); if (ls.length) return ls.reduce((a, b) => a + b, 0) / ls.length; }
+                const L = lum(cs.backgroundColor);
+                if (L !== null) return L;
+            }
+        }
+        return 1;
+    };
+    let queued = false;
+    const update = () => {
+        queued = false;
+        if (btn.classList.contains('is-active')) { btn.style.removeProperty('--bar'); return; }
+        const r = btn.getBoundingClientRect();
+        const L = groundAt(r.left + r.width / 2, r.top + r.height / 2);
+        // Whichever of ink and white stands further from the ground.
+        const onWhite = 1.05 / (L + 0.05), onInk = (L + 0.05) / 0.059;
+        btn.style.setProperty('--bar', onInk > onWhite * 1.25 ? 'var(--gray-900)' : 'var(--white)');
+    };
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    addEventListener('scroll', queue, { passive: true });
+    addEventListener('resize', queue);
+    btn.addEventListener('click', () => setTimeout(update, 50));
+    update();
+})();
