@@ -712,12 +712,14 @@ document.querySelectorAll('.scholarship-toggle').forEach((btn) => {
     // Every display line on the site dances; running text stays still so it
     // can be read.
     const sel = [
-        '.hero-title', '.about-hero-text h1', '.page-hero h1', '.gallery-title h1', '.pull blockquote',
+        '.about-hero-text h1', '.page-hero h1', '.gallery-title h1', '.pull blockquote',
         '.section-heading', '.programming-heading', '.program-panel-title a', '.class-band-body h2 .serif',
         '.class-band-body h3', '.about-story-title h2 .serif', '.bio-title', '.bio-band-title',
         '.home-cta h2', '.footer-statement p', '.weekly-day-head'
     ].join(', ');
     document.querySelectorAll(sel).forEach((el) => {
+        // Headings drawn as breathing outlines (js/senses.js) do not dance too.
+        if (el.closest('.breathe')) return;
         el.classList.add('dance');
         el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
         let k = 0;

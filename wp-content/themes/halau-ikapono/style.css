@@ -823,6 +823,20 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     color: #fff;
     margin: 0;
 }
+/* Headings that breathe: the real words keep the heading's size and stay
+   readable to screen readers and search, invisible; the same words drawn
+   as stretched, breathing outlines sit exactly over them (js/senses.js). */
+.breathe { position: relative; display: inline-block; }
+.breathe .breathe-text { color: transparent; }
+.breathe a { position: relative; display: inline-block; }
+.breathe .breathe-art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
 
 /* Body style: Alegreya Sans Regular 16, letter-spacing -1% */
 .hero-tagline {
@@ -1042,6 +1056,7 @@ body.menu-open .site-header .site-logo { opacity: 0; pointer-events: none; }
     background: var(--white);
     color: var(--gray-900);
     transform: rotate(var(--tilt));
+    border-radius: 10px;   /* a soft corner; the photo inside is clipped to it */
 }
 .program-panel:nth-child(2) { --tilt: 1deg; }
 .program-panel:nth-child(3) { --tilt: -0.6deg; }

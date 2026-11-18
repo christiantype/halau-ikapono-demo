@@ -21,9 +21,12 @@
         const a = p1[0]*p2[1]-p1[1]*p2[0], b = p3[0]*p4[1]-p3[1]*p4[0];
         return [(a*(p3[0]-p4[0]) - (p1[0]-p2[0])*b)/d, (a*(p3[1]-p4[1]) - (p1[1]-p2[1])*b)/d];
     };
-    const inset = (q, k) => {
+    // k per edge [top, right, bottom, left]: the section's own edges get 0,
+    // so the words sit exactly on the grid; only inner seams open a gap.
+    const inset = (q, ks) => {
         const e = [];
         for (let i = 0; i < 4; i++) {
+            const k = ks[i];
             const a = q[i], b = q[(i + 1) % 4], dx = b[0]-a[0], dy = b[1]-a[1], l = Math.hypot(dx, dy);
             e.push([[a[0] - dy / l * k, a[1] + dx / l * k], [b[0] - dy / l * k, b[1] + dx / l * k]]);
         }
@@ -75,10 +78,23 @@
             if (next !== layout || !paths.length) {
                 layout = next;
                 svg.replaceChildren();
+                // data-image: the words become windows onto one photograph,
+                // which runs continuously behind all of them.
+                let into = svg;
+                if (D.image) {
+                    const id = 'senses-clip-' + Math.random().toString(36).slice(2, 8);
+                    const defs = document.createElementNS(NS, 'defs');
+                    into = document.createElementNS(NS, 'clipPath');
+                    into.setAttribute('id', id); defs.appendChild(into); svg.appendChild(defs);
+                    const img = document.createElementNS(NS, 'image');
+                    img.setAttribute('href', D.image); img.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+                    img.setAttribute('width', '100%'); img.setAttribute('height', '100%');
+                    img.setAttribute('clip-path', 'url(#' + id + ')'); svg.appendChild(img);
+                }
                 paths = layout.flat().map((w) => {
                     const p = document.createElementNS(NS, 'path');
                     p.setAttribute('fill', colors[w] || D.color || '#f3e3dd');
-                    svg.appendChild(p); return p;
+                    into.appendChild(p); return p;
                 });
             }
         };
@@ -108,7 +124,9 @@
                     cuts.push({ x0: x + sl, y0: yT, x1: x - sl, y1: yB });
                 });
                 r.forEach((w, ci) => {
-                    const q = inset([meet(top, cuts[ci]), meet(top, cuts[ci + 1]), meet(bot, cuts[ci + 1]), meet(bot, cuts[ci])], GAP / 2);
+                    const g = GAP / 2 * Math.min(1, W / 1240);   // the gap is set for a 1240 grid; narrower, it narrows
+                    const q = inset([meet(top, cuts[ci]), meet(top, cuts[ci + 1]), meet(bot, cuts[ci + 1]), meet(bot, cuts[ci])],
+                        [ri ? g : 0, ci < r.length - 1 ? g : 0, ri < layout.length - 1 ? g : 0, ci ? g : 0]);
                     paths[k++].setAttribute('d', pathFor(w, q));
                 });
             });
