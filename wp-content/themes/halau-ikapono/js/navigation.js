@@ -188,16 +188,11 @@ document.addEventListener('DOMContentLoaded', function () {
         gallery.querySelector('.gallery-next').addEventListener('click', function () { goTo(index + 1); });
 
         // A grid photo opens the slideshow on that photo.
-        gallery.querySelectorAll('.gallery-cell').forEach(function (cell) {
-            cell.addEventListener('click', function () {
-                goTo(parseInt(cell.dataset.index, 10));
-                setView('slideshow');
-                slideshow.focus({ preventScroll: true });
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
+        // (Grid photos grow in place in the mosaic below; they no longer
+        // open the slideshow.)
 
         slideshow.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') { setView('grid'); return; }
             if (e.key === 'ArrowRight') { e.preventDefault(); goTo(index + 1); }
             if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(index - 1); }
         });
@@ -994,5 +989,108 @@ window.halauFixSlots = function (els) {
     addEventListener('scroll', queue, { passive: true });
     addEventListener('resize', queue);
     btn.addEventListener('click', () => setTimeout(update, 50));
+    // Pages that change what is behind the menu (the gallery switching to
+    // its light mosaic) are re-read when they change, and once fully loaded.
+    new MutationObserver(queue).observe(document.body, { attributes: true, subtree: true, attributeFilter: ['data-view', 'hidden'] });
+    addEventListener('load', queue);
     update();
+})();
+
+/* Gallery as a mosaic, in the Justifier's manner: the photos are set in
+   justified rows, then cut apart by slanted seams, so every photo takes
+   its own four-sided shape and the shapes nest into one another. */
+(function () {
+    const grid = document.querySelector('.gallery-full-grid');
+    if (!grid) return;
+    const cells = [...grid.querySelectorAll('.gallery-cell')];
+    if (!cells.length) return;
+    grid.classList.add('is-mosaic');
+    const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+    const own = (c) => { const i = c.querySelector('img'); const w = +i.getAttribute('width') || i.naturalWidth || 3, h = +i.getAttribute('height') || i.naturalHeight || 2; return w / h; };
+    const ratio = own;
+    const lineX = (s, y) => s.x0 + (s.x1 - s.x0) * (y - s.y0) / (s.y1 - s.y0);
+    const lineY = (s, x) => s.y0 + (s.y1 - s.y0) * (x - s.x0) / (s.x1 - s.x0);
+    const meet = (row, col) => { let x = col.x0, y = 0; for (let i = 0; i < 4; i++) { y = lineY(row, x); x = lineX(col, y); } return [x, lineY(row, x)]; };
+    const isect = (p1, p2, p3, p4) => {
+        const d = (p1[0]-p2[0])*(p3[1]-p4[1]) - (p1[1]-p2[1])*(p3[0]-p4[0]);
+        const a = p1[0]*p2[1]-p1[1]*p2[0], b = p3[0]*p4[1]-p3[1]*p4[0];
+        return [(a*(p3[0]-p4[0]) - (p1[0]-p2[0])*b)/d, (a*(p3[1]-p4[1]) - (p1[1]-p2[1])*b)/d];
+    };
+    const inset = (q, ks) => {
+        const e = [];
+        for (let i = 0; i < 4; i++) {
+            const a = q[i], b = q[(i + 1) % 4], dx = b[0]-a[0], dy = b[1]-a[1], l = Math.hypot(dx, dy) || 1, k = ks[i];
+            e.push([[a[0] - dy / l * k, a[1] + dx / l * k], [b[0] - dy / l * k, b[1] + dx / l * k]]);
+        }
+        return [0, 1, 2, 3].map((i) => isect(...e[(i + 3) % 4], ...e[i]));
+    };
+    let lastW = 0;
+    const layout = () => {
+        const W = grid.clientWidth;
+        if (!W || W === lastW) return;
+        lastW = W;
+        const target = W > 900 ? 300 : W > 560 ? 220 : 150, gap = W > 560 ? 8 : 5;
+        // Justified rows: add photos until the row is full at the target height.
+        const rows = []; let row = [], sum = 0;
+        cells.forEach((c) => { row.push(c); sum += ratio(c); if (sum * target >= W) { rows.push(row); row = []; sum = 0; } });
+        if (row.length) { if (rows.length && row.length < 2) rows[rows.length - 1].push(...row); else rows.push(row); }
+        const heights = rows.map((r) => Math.min(W / r.reduce((s, c) => s + ratio(c), 0), target * 1.6));
+        const H = heights.reduce((a, b) => a + b, 0);
+        // Seams between rows lean one way, then the other.
+        const seams = [{ x0: 0, y0: 0, x1: W, y1: 0 }]; let y = 0;
+        rows.forEach((r, ri) => {
+            y += heights[ri];
+            if (ri === rows.length - 1) { seams.push({ x0: 0, y0: H, x1: W, y1: H }); return; }
+            const sl = heights[ri] * (0.05 + 0.05 * hash(ri + 40)) * (ri % 2 ? 1 : -1);
+            seams.push({ x0: 0, y0: y + sl, x1: W, y1: y - sl });
+        });
+        rows.forEach((r, ri) => {
+            const top = seams[ri], bot = seams[ri + 1], yT = (top.y0 + top.y1) / 2, yB = (bot.y0 + bot.y1) / 2, rh = yB - yT;
+            const total = r.reduce((s, c) => s + ratio(c), 0);
+            const cuts = [{ x0: 0, y0: yT, x1: 0, y1: yB }]; let x = 0;
+            r.forEach((c, ci) => {
+                x += ratio(c) / total * W;
+                if (ci === r.length - 1) { cuts.push({ x0: W, y0: yT, x1: W, y1: yB }); return; }
+                const sl = (hash(ri * 13 + ci * 7) - 0.5) * 0.36 * rh;
+                cuts.push({ x0: x + sl, y0: yT, x1: x - sl, y1: yB });
+            });
+            r.forEach((c, ci) => {
+                const g = gap / 2;
+                const q = inset([meet(top, cuts[ci]), meet(top, cuts[ci + 1]), meet(bot, cuts[ci + 1]), meet(bot, cuts[ci])],
+                    [ri ? g : 0, ci < r.length - 1 ? g : 0, ri < rows.length - 1 ? g : 0, ci ? g : 0]);
+                const xs = q.map((p) => p[0]), ys = q.map((p) => p[1]);
+                const x0 = Math.min(...xs), y0 = Math.min(...ys), w = Math.max(...xs) - x0, h = Math.max(...ys) - y0;
+                c.style.left = x0 + 'px'; c.style.top = y0 + 'px'; c.style.width = w + 'px'; c.style.height = h + 'px';
+                c.style.clipPath = 'polygon(' + q.map((p) => (p[0] - x0).toFixed(1) + 'px ' + (p[1] - y0).toFixed(1) + 'px').join(', ') + ')';
+            });
+        });
+        grid.style.height = H + 'px';
+    };
+    new ResizeObserver(() => layout()).observe(grid);
+    layout();
+    // A click opens the photo large in a pop-up; arrows step through,
+    // Escape or a click outside closes it.
+    const modal = document.querySelector('.photo-modal');
+    if (modal) {
+        const big = modal.querySelector('.photo-modal-img');
+        let at = 0;
+        const show = (n) => {
+            at = (n + cells.length) % cells.length;
+            const im = cells[at].querySelector('img');
+            big.src = im.dataset.full || im.currentSrc || im.src; big.alt = im.alt;
+        };
+        cells.forEach((c, n) => c.addEventListener('click', (e) => {
+            e.preventDefault(); e.stopImmediatePropagation();
+            show(n); modal.showModal(); document.documentElement.classList.add('has-modal');
+        }, true));
+        modal.querySelector('.photo-modal-close').addEventListener('click', () => modal.close());
+        modal.querySelector('.photo-modal-prev').addEventListener('click', () => show(at - 1));
+        modal.querySelector('.photo-modal-next').addEventListener('click', () => show(at + 1));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
+        modal.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') show(at - 1); if (e.key === 'ArrowRight') show(at + 1); });
+        modal.addEventListener('close', () => { document.documentElement.classList.remove('has-modal'); cells[at].focus({ preventScroll: true }); });
+        let tx = null;
+        modal.addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; }, { passive: true });
+        modal.addEventListener('touchend', (e) => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) show(dx < 0 ? at + 1 : at - 1); tx = null; });
+    }
 })();
